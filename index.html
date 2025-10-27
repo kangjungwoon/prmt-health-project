@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BMI 건강 계산기 v2</title>
+
+    <style>
+        /* (대부분 v1과 동일합니다) */
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+            background-color: #f4f7f6;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+        }
+
+        .calculator-card {
+            background-color: #ffffff;
+            padding: 2rem;
+            border-radius: 12px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+            width: 90%;
+            max-width: 400px;
+        }
+
+        h1 {
+            color: #333;
+            font-size: 1.5rem;
+            text-align: center;
+            margin-bottom: 1.5rem;
+        }
+
+        .input-group {
+            margin-bottom: 1rem;
+        }
+
+        .input-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            color: #555;
+            font-weight: 600;
+        }
+
+        .input-group input {
+            width: 100%;
+            padding: 0.75rem;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            box-sizing: border-box;
+        }
+
+        button {
+            width: 100%;
+            padding: 0.85rem;
+            background-color: #007aff;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 1rem;
+            font-weight: 700;
+            cursor: pointer;
+            transition: background-color 0.2s;
+        }
+
+        button:hover {
+            background-color: #005bb5;
+        }
+        
+        /* --- 🎨 v2에서 업그레이드된 부분 --- */
+
+        /* 결과가 표시될 공간 */
+        #result-area {
+            margin-top: 1.5rem;
+            padding: 1rem;
+            background-color: #f8f8f8; /* 살짝 연한 회색 배경 */
+            border: 1px solid #eee;
+            border-radius: 8px;
+            text-align: center;
+            color: #333;
+            display: none; /* 처음에는 숨김 */
+        }
+        
+        /* "당신의 BMI는..." 부분 스타일 */
+        .bmi-value {
+            font-size: 1.1rem;
+            font-weight: 600;
+            display: block; /* 한 줄 차지 */
+            margin-bottom: 0.5rem;
+        }
+
+        /* "정상 체중입니다!" 같은 '조언' 부분 스타일 */
+        .bmi-status {
+            font-size: 1.2rem; /* 조언 글씨는 더 크게 */
+            font-weight: 700;
+            display: block;
+        }
+        
+        /* '조언'에 적용될 색상 클래스 */
+        .status-underweight { color: #007aff; } /* 저체중: 파란색 */
+        .status-normal { color: #34c759; }     /* 정상: 녹색 */
+        .status-overweight { color: #ff9500; } /* 과체중: 주황색 */
+        .status-obese { color: #ff3b30; }      /* 비만: 빨간색 */
+
+        /* --- 🎨 여기까지 업그레이드 --- */
+
+    </style>
+</head>
+
+<body>
+
+    <div class="calculator-card">
+        <h1>BMI 건강 계산기</h1>
+        <div class="input-group">
+            <label for="height">키 (cm):</label>
+            <input type="number" id="height" placeholder="예: 170">
+        </div>
+        <div class="input-group">
+            <label for="weight">몸무게 (kg):</label>
+            <input type="number" id="weight" placeholder="예: 65">
+        </div>
+        <button onclick="calculateBMI()">계산하기</button>
+        <div id="result-area">
+            </div>
+    </div>
+
+    <script>
+        // 'calculateBMI' 라는 이름의 행동(기능)
+        function calculateBMI() {
+            // 1. 재료(값) 가져오기
+            let heightCm = document.getElementById('height').value;
+            let weightKg = document.getElementById('weight').value;
+
+            // 2. 재료 손질 (숫자가 0보다 큰지 확인)
+            if (heightCm > 0 && weightKg > 0) {
+                // 키(cm)를 미터(m) 단위로 변경
+                let heightM = heightCm / 100;
+                
+                // 3. 메인 요리 (BMI 계산)
+                let bmi = (weightKg / (heightM * heightM)).toFixed(2);
+                
+                // --- 🧠 v2에서 업그레이드된 '판단' 부분 ---
+                
+                let statusMessage = ""; // 조언 메시지를 담을 변수
+                let statusClass = "";   // 색상 스타일(CSS)을 담을 변수
+
+                // 'if... else if... else' (만약... 그게 아니고 만약... 그것도 아니면)
+                if (bmi < 18.5) {
+                    statusMessage = "저체중입니다. 😢";
+                    statusClass = "status-underweight";
+                } else if (bmi >= 18.5 && bmi <= 22.9) {
+                    statusMessage = "정상 체중입니다! 👍";
+                    statusClass = "status-normal";
+                } else if (bmi >= 23 && bmi <= 24.9) {
+                    statusMessage = "과체중입니다. 😟";
+                    statusClass = "status-overweight";
+                } else { // 25 이상인 모든 경우
+                    statusMessage = "비만입니다. 🚨";
+                    statusClass = "status-obese";
+                }
+                
+                // --- 🧠 여기까지 '판단' 끝 ---
+
+
+                // 4. 요리(결과) 내놓기 (업그레이드!)
+                let resultDiv = document.getElementById('result-area');
+                
+                // 그 공간에 HTML 내용을 채워 넣습니다.
+                // (조언과 색상 스타일을 함께 넣어줍니다)
+                resultDiv.innerHTML = 
+                    "<span class='bmi-value'>당신의 BMI는 <strong>" + bmi + "</strong> 입니다.</span>" +
+                    "<span class='bmi-status " + statusClass + "'>" + statusMessage + "</span>";
+                
+                // 숨겨뒀던 결과 공간을 '보이게' 만듭니다.
+                resultDiv.style.display = "block";
+
+            } else {
+                // 5. 예외 처리 (재료가 없을 때)
+                alert("키와 몸무게를 올바르게 입력해주세요!");
+            }
+        }
+    </script>
+
+</body>
+</html>
