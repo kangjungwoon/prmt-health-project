@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>종합 건강 계산기 v5</title>
+    <title>종합 건강 계산기 v6.1 (오류 수정)</title>
 
     <style>
         body {
@@ -51,73 +51,76 @@
             box-sizing: border-box;
             font-size: 1rem;
         }
-
-        /* --- 🎨 v5에서 새로 추가된 스타일 --- */
         
-        /* '식단 칼로리' 제목 스타일 */
         h2 {
-            font-size: 1.2rem;
+            font-size: 1.3rem;
             color: #333;
-            border-bottom: 1px solid #eee;
+            border-bottom: 2px solid #eee;
             padding-bottom: 0.5rem;
             margin-top: 2rem;
             margin-bottom: 1rem;
+            text-align: center;
         }
         
-        /* '밥 한공기'... '라면' 등 각 음식 항목 스타일 */
+        h3 {
+            font-size: 1.1rem;
+            color: #007aff;
+            margin-top: 2rem;
+            margin-bottom: 0.75rem;
+        }
+
         .food-item {
             display: flex;
-            justify-content: space-between; /* 양쪽 끝으로 붙이기 */
-            align-items: center; /* 세로 중앙 정렬 */
+            justify-content: space-between;
+            align-items: center;
             padding: 0.75rem 0.25rem;
-            border-bottom: 1px solid #f0f0f0; /* 연한 구분선 */
+            border-bottom: 1px solid #f0f0f0;
         }
         
-        /* 음식 이름 스타일 (예: 밥 한공기) */
         .food-name {
             font-size: 1rem;
             color: #333;
         }
         
-        /* [+], [-], [0] 카운터 묶음 스타일 */
         .food-counter {
             display: flex;
             align-items: center;
         }
 
-        /* [+], [-] 버튼 공통 스타일 */
         .counter-btn {
-            width: 28px;
-            height: 28px;
-            border: 1px solid #007aff;
-            background-color: #ffffff;
-            color: #007aff;
-            border-radius: 14px; /* 동그랗게 */
-            font-size: 1.2rem;
+            width: 32px;
+            height: 32px;
+            border: none;
+            border-radius: 16px;
+            font-size: 1.5rem;
             font-weight: 600;
             cursor: pointer;
-            line-height: 26px; /* 글자 세로 정렬 */
+            line-height: 30px;
+            transition: opacity 0.2s;
         }
-        
-        /* [+] 버튼은 색 채우기 */
+        .counter-btn:hover {
+            opacity: 0.8;
+        }
+
+        .btn-minus {
+            background-color: #eef0f2;
+            color: #555;
+        }
+
         .btn-plus {
             background-color: #007aff;
             color: white;
         }
 
-        /* 숫자 [0] 스타일 */
         .count-display {
             font-size: 1.1rem;
             font-weight: 700;
             color: #333;
-            margin: 0 0.75rem; /* 버튼과의 좌우 여백 */
-            min-width: 20px; /* 최소 너비 */
+            margin: 0 0.75rem;
+            min-width: 20px;
             text-align: center;
         }
         
-        /* --- 🎨 여기까지 v5 스타일 --- */
-        
-        /* 메인 '결과 확인' 버튼 */
         button {
             width: 100%;
             padding: 0.85rem;
@@ -129,41 +132,13 @@
             font-weight: 700;
             cursor: pointer;
             transition: background-color 0.2s;
-            margin-top: 2rem; /* 카운터와 여백 */
+            margin-top: 2rem;
         }
 
-        button:hover {
-            background-color: #005bb5;
-        }
-
-        /* 결과 박스 공통 스타일 (v4와 동일) */
-        .result-box {
-            margin-top: 1.5rem;
-            padding: 1rem;
-            background-color: #f8f8f8;
-            border: 1px solid #eee;
-            border-radius: 8px;
-            text-align: center;
-            color: #333;
-            display: none;
-        }
-        
-        .bmi-value, .sugar-value, .calorie-value {
-            font-size: 1.1rem;
-            font-weight: 600;
-            display: block;
-            margin-bottom: 0.5rem;
-        }
-        .bmi-status, .sugar-status, .calorie-status {
-            font-size: 1.2rem;
-            font-weight: 700;
-            display: block;
-        }
-        .status-underweight { color: #007aff; }
-        .status-normal, .status-good { color: #34c759; }
-        .status-overweight, .status-warning { color: #ff9500; }
-        .status-obese, .status-danger { color: #ff3b30; }
-
+        .result-box { margin-top: 1.5rem; padding: 1rem; background-color: #f8f8f8; border: 1px solid #eee; border-radius: 8px; text-align: center; color: #333; display: none; }
+        .bmi-value, .sugar-value, .calorie-value { font-size: 1.1rem; font-weight: 600; display: block; margin-bottom: 0.5rem; }
+        .bmi-status, .sugar-status, .calorie-status { font-size: 1.2rem; font-weight: 700; display: block; }
+        .status-underweight { color: #007aff; } .status-normal, .status-good { color: #34c759; } .status-overweight, .status-warning { color: #ff9500; } .status-obese, .status-danger { color: #ff3b30; }
     </style>
 </head>
 
@@ -172,67 +147,55 @@
     <div class="calculator-card">
         <h1>종합 건강 계산기</h1>
 
-        <div class="input-group">
-            <label for="height">키 (cm):</label>
-            <input type="number" id="height" placeholder="예: 170">
-        </div>
-        <div class="input-group">
-            <label for="weight">몸무게 (kg):</label>
-            <input type="number" id="weight" placeholder="예: 65">
-        </div>
-
+        <div class="input-group"><label for="height">키 (cm):</label><input type="number" id="height" placeholder="예: 170"></div>
+        <div class="input-group"><label for="weight">몸무게 (kg):</label><input type="number" id="weight" placeholder="예: 65"></div>
         <hr style="border:none; border-top: 1px solid #eee; margin: 1.5rem 0;">
-        <div class="input-group">
-            <label for="blood-sugar">공복 혈당 (mg/dL):</label>
-            <input type="number" id="blood-sugar" placeholder="예: 95">
-        </div>
+        <div class="input-group"><label for="blood-sugar">공복 혈당 (mg/dL):</label><input type="number" id="blood-sugar" placeholder="예: 95"></div>
 
-        <h2>식단 칼로리 (v5)</h2>
+        <h2>식단 칼로리 (v6.1)</h2>
         
-        <div class="food-item">
-            <span class="food-name">밥 한공기 (300 kcal)</span>
-            <div class="food-counter">
-                <button class="counter-btn" onclick="decreaseCount('rice')">-</button>
-                <span id="count-rice" class="count-display">0</span>
-                <button class="counter-btn btn-plus" onclick="increaseCount('rice')">+</button>
-            </div>
-        </div>
+        <h3>아침</h3>
+        <div class="food-item"><span class="food-name">밥 한공기 (300 kcal)</span><div class="food-counter"><button class="counter-btn btn-minus" onclick="decreaseCount('breakfast', 'rice')">-</button><span id="count-breakfast-rice" class="count-display">0</span><button class="counter-btn btn-plus" onclick="increaseCount('breakfast', 'rice')">+</button></div></div>
+        <div class="food-item"><span class="food-name">계란후라이 (120 kcal)</span><div class="food-counter"><button class="counter-btn btn-minus" onclick="decreaseCount('breakfast', 'egg')">-</button><span id="count-breakfast-egg" class="count-display">0</span><button class="counter-btn btn-plus" onclick="increaseCount('breakfast', 'egg')">+</button></div></div>
+        <div class="food-item"><span class="food-name">사과 1개 (95 kcal)</span><div class="food-counter"><button class="counter-btn btn-minus" onclick="decreaseCount('breakfast', 'apple')">-</button><span id="count-breakfast-apple" class="count-display">0</span><button class="counter-btn btn-plus" onclick="increaseCount('breakfast', 'apple')">+</button></div></div>
+        <div class="food-item"><span class="food-name">닭가슴살 100g (165 kcal)</span><div class="food-counter"><button class="counter-btn btn-minus" onclick="decreaseCount('breakfast', 'chicken')">-</button><span id="count-breakfast-chicken" class="count-display">0</span><button class="counter-btn btn-plus" onclick="increaseCount('breakfast', 'chicken')">+</button></div></div>
+        <div class="food-item"><span class="food-name">라면 1봉 (550 kcal)</span><div class="food-counter"><button class="counter-btn btn-minus" onclick="decreaseCount('breakfast', 'ramen')">-</button><span id="count-breakfast-ramen" class="count-display">0</span><button class="counter-btn btn-plus" onclick="increaseCount('breakfast', 'ramen')">+</button></div></div>
         
-        <div class="food-item">
-            <span class="food-name">계란후라이 (120 kcal)</span>
-            <div class="food-counter">
-                <button class="counter-btn" onclick="decreaseCount('egg')">-</button>
-                <span id="count-egg" class="count-display">0</span>
-                <button class="counter-btn btn-plus" onclick="increaseCount('egg')">+</button>
-            </div>
-        </div>
+        <h3>오전 간식</h3>
+        <div class="food-item"><span class="food-name">밥 한공기 (300 kcal)</span><div class="food-counter"><button class="counter-btn btn-minus" onclick="decreaseCount('morningsnack', 'rice')">-</button><span id="count-morningsnack-rice" class="count-display">0</span><button class="counter-btn btn-plus" onclick="increaseCount('morningsnack', 'rice')">+</button></div></div>
+        <div class="food-item"><span class="food-name">계란후라이 (120 kcal)</span><div class="food-counter"><button class="counter-btn btn-minus" onclick="decreaseCount('morningsnack', 'egg')">-</button><span id="count-morningsnack-egg" class="count-display">0</span><button class="counter-btn btn-plus" onclick="increaseCount('morningsnack', 'egg')">+</button></div></div>
+        <div class="food-item"><span class="food-name">사과 1개 (95 kcal)</span><div class="food-counter"><button class="counter-btn btn-minus" onclick="decreaseCount('morningsnack', 'apple')">-</button><span id="count-morningsnack-apple" class="count-display">0</span><button class="counter-btn btn-plus" onclick="increaseCount('morningsnack', 'apple')">+</button></div></div>
+        <div class="food-item"><span class="food-name">닭가슴살 100g (165 kcal)</span><div class="food-counter"><button class="counter-btn btn-minus" onclick="decreaseCount('morningsnack', 'chicken')">-</button><span id="count-morningsnack-chicken" class="count-display">0</span><button class="counter-btn btn-plus" onclick="increaseCount('morningsnack', 'chicken')">+</button></div></div>
+        <div class="food-item"><span class="food-name">라면 1봉 (550 kcal)</span><div class="food-counter"><button class="counter-btn btn-minus" onclick="decreaseCount('morningsnack', 'ramen')">-</button><span id="count-morningsnack-ramen" class="count-display">0</span><button class="counter-btn btn-plus" onclick="increaseCount('morningsnack', 'ramen')">+</button></div></div>
 
-        <div class="food-item">
-            <span class="food-name">사과 1개 (95 kcal)</span>
-            <div class="food-counter">
-                <button class="counter-btn" onclick="decreaseCount('apple')">-</button>
-                <span id="count-apple" class="count-display">0</span>
-                <button class="counter-btn btn-plus" onclick="increaseCount('apple')">+</button>
-            </div>
-        </div>
+        <h3>점심</h3>
+        <div class="food-item"><span class="food-name">밥 한공기 (300 kcal)</span><div class="food-counter"><button class="counter-btn btn-minus" onclick="decreaseCount('lunch', 'rice')">-</button><span id="count-lunch-rice" class="count-display">0</span><button class="counter-btn btn-plus" onclick="increaseCount('lunch', 'rice')">+</button></div></div>
+        <div class="food-item"><span class="food-name">계란후라이 (120 kcal)</span><div class="food-counter"><button class="counter-btn btn-minus" onclick="decreaseCount('lunch', 'egg')">-</button><span id="count-lunch-egg" class="count-display">0</span><button class="counter-btn btn-plus" onclick="increaseCount('lunch', 'egg')">+</button></div></div>
+        <div class="food-item"><span class="food-name">사과 1개 (95 kcal)</span><div class="food-counter"><button class="counter-btn btn-minus" onclick="decreaseCount('lunch', 'apple')">-</button><span id="count-lunch-apple" class="count-display">0</span><button class="counter-btn btn-plus" onclick="increaseCount('lunch', 'apple')">+</button></div></div>
+        <div class="food-item"><span class="food-name">닭가슴살 100g (165 kcal)</span><div class="food-counter"><button class="counter-btn btn-minus" onclick="decreaseCount('lunch', 'chicken')">-</button><span id="count-lunch-chicken" class="count-display">0</span><button class="counter-btn btn-plus" onclick="increaseCount('lunch', 'chicken')">+</button></div></div>
+        <div class="food-item"><span class="food-name">라면 1봉 (550 kcal)</span><div class="food-counter"><button class="counter-btn btn-minus" onclick="decreaseCount('lunch', 'ramen')">-</button><span id="count-lunch-ramen" class="count-display">0</span><button class="counter-btn btn-plus" onclick="increaseCount('lunch', 'ramen')">+</button></div></div>
 
-        <div class="food-item">
-            <span class="food-name">닭가슴살 100g (165 kcal)</span>
-            <div class="food-counter">
-                <button class="counter-btn" onclick="decreaseCount('chicken')">-</button>
-                <span id="count-chicken" class="count-display">0</span>
-                <button class="counter-btn btn-plus" onclick="increaseCount('chicken')">+</button>
-            </div>
-        </div>
+        <h3>오후 간식</h3>
+        <div class="food-item"><span class="food-name">밥 한공기 (300 kcal)</span><div class="food-counter"><button class="counter-btn btn-minus" onclick="decreaseCount('afternoonsnack', 'rice')">-</button><span id="count-afternoonsnack-rice" class="count-display">0</span><button class="counter-btn btn-plus" onclick="increaseCount('afternoonsnack', 'rice')">+</button></div></div>
+        <div class="food-item"><span class="food-name">계란후라이 (120 kcal)</span><div class="food-counter"><button class="counter-btn btn-minus" onclick="decreaseCount('afternoonsnack', 'egg')">-</button><span id="count-afternoonsnack-egg" class="count-display">0</span><button class="counter-btn btn-plus" onclick="increaseCount('afternoonsnack', 'egg')">+</button></div></div>
+        <div class="food-item"><span class="food-name">사과 1개 (95 kcal)</span><div class="food-counter"><button class="counter-btn btn-minus" onclick="decreaseCount('afternoonsnack', 'apple')">-</button><span id="count-afternoonsnack-apple" class="count-display">0</span><button class="counter-btn btn-plus" onclick="increaseCount('afternoonsnack', 'apple')">+</button></div></div>
+        <div class="food-item"><span class="food-name">닭가슴살 100g (165 kcal)</span><div class="food-counter"><button class="counter-btn btn-minus" onclick="decreaseCount('afternoonsnack', 'chicken')">-</button><span id="count-afternoonsnack-chicken" class="count-display">0</span><button class="counter-btn btn-plus" onclick="increaseCount('afternoonsnack', 'chicken')">+</button></div></div>
+        <div class="food-item"><span class="food-name">라면 1봉 (550 kcal)</span><div class="food-counter"><button class="counter-btn btn-minus" onclick="decreaseCount('afternoonsnack', 'ramen')">-</button><span id="count-afternoonsnack-ramen" class="count-display">0</span><button class="counter-btn btn-plus" onclick="increaseCount('afternoonsnack', 'ramen')">+</button></div></div>
+
+        <h3>저녁</h3>
+        <div class="food-item"><span class="food-name">밥 한공기 (300 kcal)</span><div class="food-counter"><button class="counter-btn btn-minus" onclick="decreaseCount('dinner', 'rice')">-</button><span id="count-dinner-rice" class="count-display">0</span><button class="counter-btn btn-plus" onclick="increaseCount('dinner', 'rice')">+</button></div></div>
+        <div class="food-item"><span class="food-name">계란후라이 (120 kcal)</span><div class="food-counter"><button class="counter-btn btn-minus" onclick="decreaseCount('dinner', 'egg')">-</button><span id="count-dinner-egg" class="count-display">0</span><button class="counter-btn btn-plus" onclick="increaseCount('dinner', 'egg')">+</button></div></div>
+        <div class="food-item"><span class="food-name">사과 1개 (95 kcal)</span><div class="food-counter"><button class="counter-btn btn-minus" onclick="decreaseCount('dinner', 'apple')">-</button><span id="count-dinner-apple" class="count-display">0</span><button class="counter-btn btn-plus" onclick="increaseCount('dinner', 'apple')">+</button></div></div>
+        <div class="food-item"><span class="food-name">닭가슴살 100g (165 kcal)</span><div class="food-counter"><button class="counter-btn btn-minus" onclick="decreaseCount('dinner', 'chicken')">-</button><span id="count-dinner-chicken" class="count-display">0</span><button class="counter-btn btn-plus" onclick="increaseCount('dinner', 'chicken')">+</button></div></div>
+        <div class="food-item"><span class="food-name">라면 1봉 (550 kcal)</span><div class="food-counter"><button class="counter-btn btn-minus" onclick="decreaseCount('dinner', 'ramen')">-</button><span id="count-dinner-ramen" class="count-display">0</span><button class="counter-btn btn-plus" onclick="increaseCount('dinner', 'ramen')">+</button></div></div>
+
+        <h3>야식</h3>
+        <div class="food-item"><span class="food-name">밥 한공기 (300 kcal)</span><div class="food-counter"><button class="counter-btn btn-minus" onclick="decreaseCount('nightsnack', 'rice')">-</button><span id="count-nightsnack-rice" class="count-display">0</span><button class="counter-btn btn-plus" onclick="increaseCount('nightsnack', 'rice')">+</button></div></div>
+        <div class="food-item"><span class="food-name">계란후라이 (120 kcal)</span><div class="food-counter"><button class="counter-btn btn-minus" onclick="decreaseCount('nightsnack', 'egg')">-</button><span id="count-nightsnack-egg" class="count-display">0</span><button class="counter-btn btn-plus" onclick="increaseCount('nightsnack', 'egg')">+</button></div></div>
+        <div class="food-item"><span class="food-name">사과 1개 (95 kcal)</span><div class="food-counter"><button class="counter-btn btn-minus" onclick="decreaseCount('nightsnack', 'apple')">-</button><span id="count-nightsnack-apple" class="count-display">0</span><button class="counter-btn btn-plus" onclick="increaseCount('nightsnack', 'apple')">+</button></div></div>
+        <div class="food-item"><span class="food-name">닭가슴살 100g (165 kcal)</span><div class="food-counter"><button class="counter-btn btn-minus" onclick="decreaseCount('nightsnack', 'chicken')">-</button><span id="count-nightsnack-chicken" class="count-display">0</span><button class="counter-btn btn-plus" onclick="increaseCount('nightsnack', 'chicken')">+</button></div></div>
+        <div class="food-item"><span class="food-name">라면 1봉 (550 kcal)</span><div class="food-counter"><button class="counter-btn btn-minus" onclick="decreaseCount('nightsnack', 'ramen')">-</button><span id="count-nightsnack-ramen" class="count-display">0</span><button class="counter-btn btn-plus" onclick="increaseCount('nightsnack', 'ramen')">+</button></div></div>
         
-        <div class="food-item">
-            <span class="food-name">라면 1봉 (550 kcal)</span>
-            <div class="food-counter">
-                <button class="counter-btn" onclick="decreaseCount('ramen')">-</button>
-                <span id="count-ramen" class="count-display">0</span>
-                <button class="counter-btn btn-plus" onclick="increaseCount('ramen')">+</button>
-            </div>
-        </div>
         <button onclick="checkHealth()">결과 확인하기</button>
 
         <div id="bmi-result-area" class="result-box"></div>
@@ -242,52 +205,29 @@
 
     <script>
         
-        // --- 🧠 v5 '미니 냉장고' 데이터베이스 ---
-        // '음식 ID'와 '칼로리'를 짝지어 놓습니다.
-        // (이곳의 음식 ID는 HTML의 ID와 일치해야 합니다!)
-        const foodDatabase = {
-            'rice': 300,
-            'egg': 120,
-            'apple': 95,
-            'chicken': 165,
-            'ramen': 550
-        };
-        // --- 🧠 여기까지 ---
+        // (미니 냉장고, 끼니/음식 리스트, 카운터 함수는 v6와 동일합니다)
+        const foodDatabase = { 'rice': 300, 'egg': 120, 'apple': 95, 'chicken': 165, 'ramen': 550 };
+        const mealTimes = ['breakfast', 'morningsnack', 'lunch', 'afternoonsnack', 'dinner', 'nightsnack'];
+        const foodIds = ['rice', 'egg', 'apple', 'chicken', 'ramen'];
         
-
-        // --- 🆕 v5 카운터 기능 함수 (새로 추가!) ---
-        
-        // '+' 버튼을 눌렀을 때
-        function increaseCount(foodId) {
-            // 1. 'count-rice' 같은 ID를 가진 숫자 표시 공간(span)을 찾습니다.
-            let countElement = document.getElementById('count-' + foodId);
-            // 2. 현재 숫자(글자)를 가져와서 진짜 숫자(Integer)로 바꿉니다.
+        function increaseCount(mealTime, foodId) {
+            let countElement = document.getElementById('count-' + mealTime + '-' + foodId);
             let currentCount = parseInt(countElement.innerText);
-            // 3. 숫자를 1 더합니다.
             currentCount++;
-            // 4. 바뀐 숫자를 다시 숫자 표시 공간에 써줍니다.
             countElement.innerText = currentCount;
         }
 
-        // '-' 버튼을 눌렀을 때
-        function decreaseCount(foodId) {
-            // 1. 숫자 표시 공간(span)을 찾습니다.
-            let countElement = document.getElementById('count-' + foodId);
-            // 2. 현재 숫자를 가져옵니다.
+        function decreaseCount(mealTime, foodId) {
+            let countElement = document.getElementById('count-' + mealTime + '-' + foodId);
             let currentCount = parseInt(countElement.innerText);
-            // 3. (중요!) 숫자가 0보다 클 때만 1을 뺍니다. (음수 방지)
             if (currentCount > 0) {
                 currentCount--;
-                // 4. 바뀐 숫자를 다시 써줍니다.
                 countElement.innerText = currentCount;
             }
         }
-        // --- 🆕 v5 함수 여기까지 ---
 
-
-        // --- 메인 계산 함수 (v5로 업그레이드!) ---
+        // --- 메인 계산 함수 (v6.1로 오류 수정!) ---
         function checkHealth() {
-            // (BMI, 혈당 재료 가져오기는 v4와 동일)
             let heightCm = document.getElementById('height').value;
             let weightKg = document.getElementById('weight').value;
             let bloodSugar = document.getElementById('blood-sugar').value;
@@ -296,7 +236,7 @@
             let sugarDiv = document.getElementById('sugar-result-area');
             let calorieDiv = document.getElementById('calorie-result-area');
 
-            // --- 🧠 BMI 계산 (v4와 동일) ---
+            // --- BMI 계산 (정상) ---
             if (heightCm > 0 && weightKg > 0) {
                 let heightM = heightCm / 100;
                 let bmi = (weightKg / (heightM * heightM)).toFixed(2);
@@ -307,11 +247,9 @@
                 else { statusMessage = "비만입니다. 🚨"; statusClass = "status-obese"; }
                 bmiDiv.innerHTML = "<span class='bmi-value'>당신의 BMI는 <strong>" + bmi + "</strong> 입니다.</span><span class='bmi-status " + statusClass + "'>" + statusMessage + "</span>";
                 bmiDiv.style.display = "block";
-            } else {
-                bmiDiv.style.display = "none";
-            }
+            } else { bmiDiv.style.display = "none"; }
 
-            // --- 🧠 혈당 계산 (v4와 동일) ---
+            // --- 혈당 계산 (정상) ---
             if (bloodSugar > 0) {
                 let sugarMessage = "", sugarClass = "";
                 if (bloodSugar < 100) { sugarMessage = "공복 혈당이 '정상'입니다. 👍"; sugarClass = "status-good"; }
@@ -319,41 +257,37 @@
                 else { sugarMessage = "공복 혈당 '위험'입니다! 🚨"; sugarClass = "status-danger"; }
                 sugarDiv.innerHTML = "<span class='sugar-value'>공복 혈당: <strong>" + bloodSugar + "</strong> mg/dL</span><span class='sugar-status " + sugarClass + "'>" + sugarMessage + "</span>";
                 sugarDiv.style.display = "block";
-            } else {
-                sugarDiv.style.display = "none";
-            }
+            } else { sugarDiv.style.display = "none"; }
             
-            // --- 🧠 v5 칼로리 계산 (선생님 아이디어 반영!) ---
-            
-            // 1. 합계 통(totalCalories)을 0으로 준비합니다.
+            // --- 칼로리 계산 (정상) ---
             let totalCalories = 0;
-            
-            // 2. 각 음식의 '카운트 숫자'를 가져옵니다.
-            let count_rice = parseInt(document.getElementById('count-rice').innerText);
-            let count_egg = parseInt(document.getElementById('count-egg').innerText);
-            let count_apple = parseInt(document.getElementById('count-apple').innerText);
-            let count_chicken = parseInt(document.getElementById('count-chicken').innerText);
-            let count_ramen = parseInt(document.getElementById('count-ramen').innerText);
+            for (const meal of mealTimes) {
+                for (const food of foodIds) {
+                    let count = parseInt(document.getElementById('count-' + meal + '-' + food).innerText);
+                    totalCalories += (count * foodDatabase[food]);
+                }
+            }
 
-            // 3. (개수 * '미니 냉장고'의 칼로리)를 계산해서 합계 통에 더합니다.
-            totalCalories += (count_rice * foodDatabase.rice); // (예: 2 * 300)
-            totalCalories += (count_egg * foodDatabase.egg); // (예: 1 * 120)
-            totalCalories += (count_apple * foodDatabase.apple); // (예: 0 * 95)
-            totalCalories += (count_chicken * foodDatabase.chicken);
-            totalCalories += (count_ramen * foodDatabase.ramen);
-
-            // 4. 합산 결과 표시하기 (v4와 동일)
+            // --- 🚨 v6.1 오류 수정된 부분! ---
+            // (v6에서는 <span class="... 로 따옴표가 겹쳤습니다)
+            // (v6.1에서는 <span class='... 로 작은따옴표를 사용해 수정했습니다)
             if (totalCalories > 0) {
                 calorieDiv.innerHTML = "<span class='calorie-value'>섭취한 총 칼로리는 <strong>" + totalCalories + "</strong> kcal 입니다.</span>";
-                if (totalCalories < 1500) { calorieDiv.innerHTML += "<span class='calorie-status status-good'>적절한 섭취입니다. 👍</span>"; }
-                else if (totalCalories >= 1500 && totalCalories < 2500) { calorieDiv.innerHTML += "<span class='calorie-status status-warning'>조금 많아요! 😟</span>"; }
-                else { calorieDiv.innerHTML += "<span class='calorie-status status-danger'>과다 섭취입니다! 🚨</span>"; }
+                
+                if (totalCalories < 1500) {
+                    calorieDiv.innerHTML += "<span class='calorie-status status-good'>적절한 섭취입니다. 👍</span>";
+                } else if (totalCalories >= 1500 && totalCalories < 2500) {
+                    calorieDiv.innerHTML += "<span class='calorie-status status-warning'>조금 많아요! 😟</span>";
+                } else {
+                    calorieDiv.innerHTML += "<span class='calorie-status status-danger'>과다 섭취입니다! 🚨</span>";
+                }
+                
                 calorieDiv.style.display = "block";
             } else {
                 calorieDiv.style.display = "none";
             }
+            // --- 🚨 여기까지 수정 ---
             
-            // (입력값 확인 v4와 동일)
             if (!(heightCm > 0 && weightKg > 0) && !(bloodSugar > 0) && !(totalCalories > 0)) {
                 alert("확인할 값을 하나 이상 입력해주세요!");
             }
