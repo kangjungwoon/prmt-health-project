@@ -1,0 +1,243 @@
+/* --- Google Fonts (글꼴) 수입 --- */
+@import url('https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;700&display=swap');
+
+/* --- v10 '전문가용' 브랜드 색상 정의 --- */
+:root {
+    --primary-color: #28a745;  /* 핵심 녹색 (신뢰, 건강) */
+    --primary-dark: #218838;   /* 더 진한 녹색 (클릭 시) */
+    --secondary-color: #6c757d; /* 회색 (이전 버튼) */
+    --secondary-dark: #5a6268;  /* 더 진한 회색 */
+    --light-gray: #f4f7f6;     /* 앱 배경색 */
+    --white: #ffffff;         /* 카드 배경색 */
+    --text-dark: #333;         /* 기본 글자색 */
+    --text-light: #555;        /* 보조 글자색 */
+    --border-color: #e0e0e0;   /* 테두리색 */
+    --accent-blue: #007aff;    /* (v9 분석 박스용 파란색) */
+    --accent-red: #ff3b30;     /* 위험 */
+    --accent-orange: #ff9500;  /* 경고 */
+    --accent-green: #34c759;   /* 정상 */
+}
+
+/* --- 기본 설정 (모든 태그에 적용) --- */
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    font-family: 'Noto Sans KR', sans-serif; /* '전문가용 글꼴' 적용 */
+    background-color: var(--light-gray);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    padding: 1rem 0;
+    color: var(--text-dark);
+}
+
+/* --- v10 '앱 뼈대' 스타일 --- */
+.app-shell {
+    width: 100%;
+    max-width: 450px; /* 스마트폰 최적화 너비 */
+    background-color: var(--white);
+    border-radius: 16px;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.1);
+    /* '페이지 전환'을 위한 핵심 */
+    overflow: hidden; 
+}
+
+.app-header {
+    background-color: var(--primary-color);
+    color: var(--white);
+    padding: 1rem 1.5rem;
+    text-align: center;
+}
+.app-header h1 {
+    font-size: 1.2rem;
+    margin: 0;
+    color: var(--white);
+}
+
+/* --- v10 '진행 막대' 스타일 --- */
+.progress-container {
+    width: 100%;
+    background-color: #e9ecef;
+}
+.progress-bar-fill {
+    height: 8px;
+    width: 0%; /* JS가 9%, 18%... 채워줄 예정 */
+    background-color: var(--primary-color);
+    transition: width 0.4s ease-out; /* 부드럽게 채워짐 */
+}
+
+/* --- v10 '본문' 및 '페이지 전환' 스타일 --- */
+.main-content {
+    padding: 1.5rem 2rem 2rem 2rem;
+    position: relative;
+    min-height: 500px;
+}
+
+.page-section {
+    /* (JS가 .active를 붙이기 전까진 숨김) */
+    display: none; 
+    
+    /* (애니메이션을 위한 절대 위치) */
+    position: absolute;
+    top: 1.5rem;
+    left: 2rem;
+    right: 2rem;
+    animation-duration: 0.4s;
+    animation-fill-mode: forwards; /* 애니메이션 끝난 상태 유지 */
+}
+/* JS가 '현재 페이지'에 붙여줄 클래스 */
+.page-section.active {
+    display: block;
+}
+
+/* v10 '페이지 전환 애니메이션' (셰프님 요청!) */
+@keyframes slide-in-right {
+    from { opacity: 0; transform: translateX(50px); }
+    to { opacity: 1; transform: translateX(0); }
+}
+@keyframes slide-out-left {
+    from { opacity: 1; transform: translateX(0); }
+    to { opacity: 0; transform: translateX(-50px); }
+}
+@keyframes slide-in-left {
+    from { opacity: 0; transform: translateX(-50px); }
+    to { opacity: 1; transform: translateX(0); }
+}
+@keyframes slide-out-right {
+    from { opacity: 1; transform: translateX(0); }
+    to { opacity: 0; transform: translateX(50px); }
+}
+.slide-in-right { animation-name: slide-in-right; }
+.slide-out-left { animation-name: slide-out-left; }
+.slide-in-left { animation-name: slide-in-left; }
+.slide-out-right { animation-name: slide-out-right; }
+
+
+/* --- v10 '컨텐츠' 스타일 (v9 재사용 + 테마 적용) --- */
+.page-section h2 {
+    font-size: 1.5rem;
+    text-align: center;
+    color: var(--text-dark);
+    margin-bottom: 0.5rem;
+}
+.guidance-text {
+    font-size: 0.95rem;
+    color: var(--text-light);
+    text-align: center;
+    margin-bottom: 2rem;
+    min-height: 40px;
+}
+.input-group { margin-bottom: 1.25rem; }
+.input-group label { display: block; margin-bottom: 0.5rem; color: var(--text-light); font-weight: 700; }
+.input-group input {
+    width: 100%;
+    padding: 0.85rem;
+    border: 1px solid var(--border-color);
+    border-radius: 8px;
+    font-size: 1rem;
+    font-family: 'Noto Sans KR', sans-serif;
+}
+.input-group input:focus {
+    border-color: var(--primary-color);
+    box-shadow: 0 0 0 3px rgba(40, 167, 69, 0.2);
+    outline: none;
+}
+.food-item { display: flex; justify-content: space-between; align-items: center; padding: 0.85rem 0.25rem; border-bottom: 1px solid #f0f0f0; }
+.food-name { font-size: 1rem; color: var(--text-dark); }
+.food-counter { display: flex; align-items: center; }
+.counter-btn { width: 32px; height: 32px; border: none; border-radius: 16px; font-size: 1.5rem; font-weight: 600; cursor: pointer; line-height: 30px; transition: opacity 0.2s; }
+.btn-minus { background-color: #eef0f2; color: #555; }
+.btn-plus { background-color: var(--primary-color); color: white; }
+.count-display { font-size: 1.1rem; font-weight: 700; color: var(--text-dark); margin: 0 0.75rem; min-width: 20px; text-align: center; }
+
+/* --- v10 '활동량' 버튼 스타일 --- */
+.button-group {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+.activity-btn {
+    padding: 1rem;
+    font-size: 1rem;
+    font-weight: 700;
+    font-family: 'Noto Sans KR', sans-serif;
+    border: 2px solid var(--border-color);
+    background-color: var(--white);
+    color: var(--text-light);
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+.activity-btn:hover {
+    border-color: var(--primary-dark);
+}
+/* JS가 '선택됨' 클래스를 붙여줄 스타일 */
+.activity-btn.selected {
+    background-color: var(--primary-color);
+    color: var(--white);
+    border-color: var(--primary-color);
+}
+
+/* --- v10 '네비게이션' 버튼 스타일 (테마 적용) --- */
+.nav-buttons { display: flex; justify-content: space-between; margin-top: 2.5rem; }
+.nav-btn {
+    padding: 0.85rem 1.25rem;
+    border: none;
+    border-radius: 8px;
+    font-size: 1rem;
+    font-weight: 700;
+    cursor: pointer;
+    transition: background-color 0.2s;
+    font-family: 'Noto Sans KR', sans-serif;
+}
+.btn-prev { background-color: var(--secondary-color); color: white; }
+.btn-prev:hover { background-color: var(--secondary-dark); }
+.btn-next { background-color: var(--primary-color); color: white; }
+.btn-next:hover { background-color: var(--primary-dark); }
+.btn-submit { background-color: var(--primary-color); color: white; width: 100%; }
+.btn-submit:hover { background-color: var(--primary-dark); }
+.btn-restart { background-color: var(--secondary-color); color: white; width: 100%; }
+.btn-restart:hover { background-color: var(--secondary-dark); }
+
+
+/* --- v10 '결과 페이지' 스타일 (차트 + 분석) --- */
+.chart-container {
+    width: 100%;
+    max-width: 300px; /* 차트 크기 조절 */
+    margin: 1.5rem auto;
+}
+
+#analysis-result-area {
+    background-color: #e6f7ff;
+    border: 1px solid var(--accent-blue);
+    padding: 1.25rem;
+    margin-top: 1.5rem;
+    border-radius: 8px;
+}
+#analysis-result-area h3 {
+    margin: 0 0 1rem 0;
+    color: #005bb5;
+    text-align: center;
+    font-size: 1.1rem;
+}
+#analysis-result-area p {
+    font-size: 0.95rem;
+    color: var(--text-dark);
+    margin: 0.5rem 0;
+    text-align: left;
+    line-height: 1.6;
+}
+
+/* (v9 개별 결과 박스 재사용) */
+.result-box { margin-top: 1.5rem; padding: 1rem; background-color: #f8f8f8; border: 1px solid var(--border-color); border-radius: 8px; text-align: center; color: var(--text-dark); display: none; }
+.bmi-value, .sugar-value, .calorie-value { font-size: 1.1rem; font-weight: 600; display: block; margin-bottom: 0.5rem; }
+.bmi-status, .sugar-status, .calorie-status { font-size: 1.2rem; font-weight: 700; display: block; }
+.status-underweight { color: var(--accent-blue); }
+.status-normal, .status-good { color: var(--accent-green); }
+.status-overweight, .status-warning { color: var(--accent-orange); }
+.status-obese, .status-danger { color: var(--accent-red); }
