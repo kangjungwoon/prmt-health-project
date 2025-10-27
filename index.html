@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>종합 건강 계산기 v3</title>
+    <title>종합 건강 계산기 v4</title>
 
     <style>
         body {
@@ -12,9 +12,8 @@
             display: flex;
             justify-content: center;
             align-items: center;
-            /* 페이지가 길어질 수 있으니 최소 높이로 변경 */
             min-height: 100vh; 
-            padding: 1rem 0; /* 위아래 여백 */
+            padding: 2rem 0; /* 위아래 여백을 더 줍니다 */
         }
 
         .calculator-card {
@@ -23,7 +22,7 @@
             border-radius: 12px;
             box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
             width: 90%;
-            max-width: 400px;
+            max-width: 450px; /* 카드를 살짝 넓힘 */
         }
 
         h1 {
@@ -34,7 +33,7 @@
         }
 
         .input-group {
-            margin-bottom: 1rem;
+            margin-bottom: 1.25rem; /* 간격 살짝 조정 */
         }
 
         .input-group label {
@@ -44,12 +43,16 @@
             font-weight: 600;
         }
 
-        .input-group input {
+        /* 입력 칸과 '선택 메뉴(select)'의 스타일을 통일합니다 */
+        .input-group input,
+        .input-group select {
             width: 100%;
             padding: 0.75rem;
             border: 1px solid #ddd;
             border-radius: 8px;
             box-sizing: border-box;
+            background-color: white; /* select 태그 배경색 */
+            font-size: 1rem; /* 글꼴 크기 통일 */
         }
 
         button {
@@ -63,15 +66,14 @@
             font-weight: 700;
             cursor: pointer;
             transition: background-color 0.2s;
+            margin-top: 1rem; /* 버튼 위에도 살짝 여백 */
         }
 
         button:hover {
             background-color: #005bb5;
         }
 
-        /* --- 🎨 v3에서 업그레이드된 부분 --- */
-
-        /* 각 결과(BMI, 혈당)를 감싸는 공통 박스 스타일 */
+        /* 각 결과(BMI, 혈당, 칼로리)를 감싸는 공통 박스 스타일 */
         .result-box {
             margin-top: 1.5rem;
             padding: 1rem;
@@ -83,26 +85,37 @@
             display: none; /* 처음에는 숨김 */
         }
         
-        /* "당신의 BMI는..." 부분 스타일 */
-        .bmi-value, .sugar-value {
+        /* BMI, 혈당, 칼로리 값 스타일 */
+        .bmi-value, .sugar-value, .calorie-value {
             font-size: 1.1rem;
             font-weight: 600;
             display: block;
             margin-bottom: 0.5rem;
         }
 
-        /* "정상 체중입니다!" 같은 '조언' 부분 스타일 */
-        .bmi-status, .sugar-status {
+        /* '조언' 부분 스타일 */
+        .bmi-status, .sugar-status, .calorie-status {
             font-size: 1.2rem;
             font-weight: 700;
             display: block;
         }
         
-        /* '조언'에 적용될 색상 클래스 */
-        .status-underweight { color: #007aff; } /* 저체중: 파란색 */
-        .status-normal, .status-good { color: #34c759; } /* 정상: 녹색 */
-        .status-overweight, .status-warning { color: #ff9500; } /* 과체중/경계: 주황색 */
-        .status-obese, .status-danger { color: #ff3b30; } /* 비만/위험: 빨간색 */
+        /* '조언' 색상 클래스 */
+        .status-underweight { color: #007aff; }
+        .status-normal, .status-good { color: #34c759; }
+        .status-overweight, .status-warning { color: #ff9500; }
+        .status-obese, .status-danger { color: #ff3b30; }
+
+        /* --- 🎨 v4에서 새로 추가된 스타일 --- */
+        /* '식단 칼로리' 제목 스타일 */
+        h2 {
+            font-size: 1.2rem;
+            color: #333;
+            border-bottom: 1px solid #eee;
+            padding-bottom: 0.5rem;
+            margin-top: 2rem;
+            margin-bottom: 1rem;
+        }
 
     </style>
 </head>
@@ -126,17 +139,83 @@
             <label for="blood-sugar">공복 혈당 (mg/dL):</label>
             <input type="number" id="blood-sugar" placeholder="예: 95">
         </div>
+
+        <h2>식단 칼로리</h2>
+        <div class="input-group">
+            <label for="breakfast">아침</label>
+            <select id="breakfast">
+                <option value="0">--- 선택 안 함 --- (0 kcal)</option>
+                <option value="300">밥 한공기 (300 kcal)</option>
+                <option value="120">계란후라이 (120 kcal)</option>
+                <option value="95">사과 1개 (95 kcal)</option>
+                <option value="165">닭가슴살 100g (165 kcal)</option>
+                <option value="550">라면 1봉 (550 kcal)</option>
+            </select>
+        </div>
+        <div class="input-group">
+            <label for="morning-snack">오전 간식</label>
+            <select id="morning-snack">
+                <option value="0">--- 선택 안 함 --- (0 kcal)</option>
+                <option value="300">밥 한공기 (300 kcal)</option>
+                <option value="120">계란후라이 (120 kcal)</option>
+                <option value="95">사과 1개 (95 kcal)</option>
+                <option value="165">닭가슴살 100g (165 kcal)</option>
+                <option value="550">라면 1봉 (550 kcal)</option>
+            </select>
+        </div>
+        <div class="input-group">
+            <label for="lunch">점심</label>
+            <select id="lunch">
+                <option value="0">--- 선택 안 함 --- (0 kcal)</option>
+                <option value="300">밥 한공기 (300 kcal)</option>
+                <option value="120">계란후라이 (120 kcal)</option>
+                <option value="95">사과 1개 (95 kcal)</option>
+                <option value="165">닭가슴살 100g (165 kcal)</option>
+                <option value="550">라면 1봉 (550 kcal)</option>
+            </select>
+        </div>
+        <div class="input-group">
+            <label for="afternoon-snack">오후 간식</label>
+            <select id="afternoon-snack">
+                <option value="0">--- 선택 안 함 --- (0 kcal)</option>
+                <option value="300">밥 한공기 (300 kcal)</option>
+                <option value="120">계란후라이 (120 kcal)</option>
+                <option value="95">사과 1개 (95 kcal)</option>
+                <option value="165">닭가슴살 100g (165 kcal)</option>
+                <option value="550">라면 1봉 (550 kcal)</option>
+            </select>
+        </div>
+        <div class="input-group">
+            <label for="dinner">저녁</label>
+            <select id="dinner">
+                <option value="0">--- 선택 안 함 --- (0 kcal)</option>
+                <option value="300">밥 한공기 (300 kcal)</option>
+                <option value="120">계란후라이 (120 kcal)</option>
+                <option value="95">사과 1개 (95 kcal)</option>
+                <option value="165">닭가슴살 100g (165 kcal)</option>
+                <option value="550">라면 1봉 (550 kcal)</option>
+            </select>
+        </div>
+        <div class="input-group">
+            <label for="night-snack">야식</label>
+            <select id="night-snack">
+                <option value="0">--- 선택 안 함 --- (0 kcal)</option>
+                <option value="300">밥 한공기 (300 kcal)</option>
+                <option value="120">계란후라이 (120 kcal)</option>
+                <option value="95">사과 1개 (95 kcal)</option>
+                <option value="165">닭가슴살 100g (165 kcal)</option>
+                <option value="550">라면 1봉 (550 kcal)</option>
+            </select>
+        </div>
         <button onclick="checkHealth()">결과 확인하기</button>
 
-        <div id="bmi-result-area" class="result-box">
-            </div>
-
-        <div id="sugar-result-area" class="result-box">
-            </div>
+        <div id="bmi-result-area" class="result-box"></div>
+        <div id="sugar-result-area" class="result-box"></div>
+        
+        <div id="calorie-result-area" class="result-box"></div>
         </div>
 
     <script>
-        // 함수의 이름을 'calculateBMI'에서 'checkHealth'로 변경!
         function checkHealth() {
             // 1. 모든 재료(값) 가져오기
             let heightCm = document.getElementById('height').value;
@@ -146,72 +225,75 @@
             // 결과 공간(div) 미리 찾아놓기
             let bmiDiv = document.getElementById('bmi-result-area');
             let sugarDiv = document.getElementById('sugar-result-area');
+            // --- 🆕 칼로리 결과 공간 추가 ---
+            let calorieDiv = document.getElementById('calorie-result-area');
 
-            // --- 🧠 BMI 계산 부분 ---
-            // (v2와 거의 동일하지만, 결과 표시 부분이 살짝 다름)
+
+            // --- 🧠 BMI 계산 부분 (v3와 동일) ---
             if (heightCm > 0 && weightKg > 0) {
                 let heightM = heightCm / 100;
                 let bmi = (weightKg / (heightM * heightM)).toFixed(2);
+                let statusMessage = "", statusClass = "";
+                if (bmi < 18.5) { statusMessage = "저체중입니다. 😢"; statusClass = "status-underweight"; }
+                else if (bmi >= 18.5 && bmi <= 22.9) { statusMessage = "정상 체중입니다! 👍"; statusClass = "status-normal"; }
+                else if (bmi >= 23 && bmi <= 24.9) { statusMessage = "과체중입니다. 😟"; statusClass = "status-overweight"; }
+                else { statusMessage = "비만입니다. 🚨"; statusClass = "status-obese"; }
                 
-                let statusMessage = "";
-                let statusClass = "";
-
-                if (bmi < 18.5) {
-                    statusMessage = "저체중입니다. 😢";
-                    statusClass = "status-underweight";
-                } else if (bmi >= 18.5 && bmi <= 22.9) {
-                    statusMessage = "정상 체중입니다! 👍";
-                    statusClass = "status-normal";
-                } else if (bmi >= 23 && bmi <= 24.9) {
-                    statusMessage = "과체중입니다. 😟";
-                    statusClass = "status-overweight";
-                } else {
-                    statusMessage = "비만입니다. 🚨";
-                    statusClass = "status-obese";
-                }
-                
-                // BMI 공간(bmiDiv)에 결과 채워넣기
-                bmiDiv.innerHTML = 
-                    "<span class='bmi-value'>당신의 BMI는 <strong>" + bmi + "</strong> 입니다.</span>" +
-                    "<span class='bmi-status " + statusClass + "'>" + statusMessage + "</span>";
-                
-                bmiDiv.style.display = "block"; // BMI 공간 보이기
-
+                bmiDiv.innerHTML = "<span class='bmi-value'>당신의 BMI는 <strong>" + bmi + "</strong> 입니다.</span><span class='bmi-status " + statusClass + "'>" + statusMessage + "</span>";
+                bmiDiv.style.display = "block";
             } else {
-                bmiDiv.style.display = "none"; // 입력 없으면 숨기기
+                bmiDiv.style.display = "none";
             }
 
-            // --- 🧠 혈당 계산 부분 (새로 추가!) ---
+            // --- 🧠 혈당 계산 부분 (v3와 동일) ---
             if (bloodSugar > 0) {
-                let sugarMessage = "";
-                let sugarClass = "";
+                let sugarMessage = "", sugarClass = "";
+                if (bloodSugar < 100) { sugarMessage = "공복 혈당이 '정상'입니다. 👍"; sugarClass = "status-good"; }
+                else if (bloodSugar >= 100 && bloodSugar <= 119) { sugarMessage = "공복 혈당 '경계'입니다. ⚠️"; sugarClass = "status-warning"; }
+                else { sugarMessage = "공복 혈당 '위험'입니다! 🚨"; sugarClass = "status-danger"; }
 
-                // 선생님의 요청: 120 (100~119는 '경계'로 추가했습니다)
-                if (bloodSugar < 100) {
-                    sugarMessage = "공복 혈당이 '정상'입니다. 👍";
-                    sugarClass = "status-good";
-                } else if (bloodSugar >= 100 && bloodSugar <= 119) {
-                    sugarMessage = "공복 혈당 '경계'입니다. ⚠️";
-                    sugarClass = "status-warning";
-                } else { // 120 이상
-                    sugarMessage = "공복 혈당 '위험'입니다! 🚨";
-                    sugarClass = "status-danger";
-                }
-
-                // 혈당 공간(sugarDiv)에 결과 채워넣기
-                sugarDiv.innerHTML = 
-                    "<span class='sugar-value'>공복 혈당: <strong>" + bloodSugar + "</strong> mg/dL</span>" +
-                    "<span class='sugar-status " + sugarClass + "'>" + sugarMessage + "</span>";
-
-                sugarDiv.style.display = "block"; // 혈당 공간 보이기
-
+                sugarDiv.innerHTML = "<span class='sugar-value'>공복 혈당: <strong>" + bloodSugar + "</strong> mg/dL</span><span class='sugar-status " + sugarClass + "'>" + sugarMessage + "</span>";
+                sugarDiv.style.display = "block";
             } else {
-                sugarDiv.style.display = "none"; // 입력 없으면 숨기기
+                sugarDiv.style.display = "none";
             }
+            
+            // --- 🧠 v4에서 새로 추가된 '칼로리 합산' 부분 ---
+            
+            // 1. 6개 식단 메뉴에서 선택한 '칼로리 값(value)'을 가져옵니다.
+            //    'parseInt'는 글자("300")를 진짜 숫자(300)로 바꿔줍니다.
+            let cal_breakfast = parseInt(document.getElementById('breakfast').value);
+            let cal_morningsnack = parseInt(document.getElementById('morning-snack').value);
+            let cal_lunch = parseInt(document.getElementById('lunch').value);
+            let cal_afternoonsnack = parseInt(document.getElementById('afternoon-snack').value);
+            let cal_dinner = parseInt(document.getElementById('dinner').value);
+            let cal_nightsnack = parseInt(document.getElementById('night-snack').value);
+            
+            // 2. 6개 칼로리를 모두 더합니다.
+            let totalCalories = cal_breakfast + cal_morningsnack + cal_lunch + cal_afternoonsnack + cal_dinner + cal_nightsnack;
 
-            // --- 🧠 입력값 확인 ---
-            // (만약 BMI, 혈당 둘 다 아무것도 입력 안 했으면)
-            if (!(heightCm > 0 && weightKg > 0) && !(bloodSugar > 0)) {
+            // 3. 합산 결과 표시하기 (0칼로리 초과일 때만)
+            if (totalCalories > 0) {
+                calorieDiv.innerHTML = "<span class='calorie-value'>섭취한 총 칼로리는 <strong>" + totalCalories + "</strong> kcal 입니다.</span>";
+                
+                // (간단한 조언 추가!)
+                if (totalCalories < 1500) {
+                    calorieDiv.innerHTML += "<span class='calorie-status status-good'>적절한 섭취입니다. 👍</span>";
+                } else if (totalCalories >= 1500 && totalCalories < 2500) {
+                    calorieDiv.innerHTML += "<span class='calorie-status status-warning'>조금 많아요! 😟</span>";
+                } else {
+                    calorieDiv.innerHTML += "<span class='calorie-status status-danger'>과다 섭취입니다! 🚨</span>";
+                }
+                
+                calorieDiv.style.display = "block"; // 결과 공간 보이기
+            } else {
+                calorieDiv.style.display = "none"; // 0칼로리면 숨기기
+            }
+            
+            // --- 🧠 여기까지 칼로리 합산 끝 ---
+            
+            // (만약 모든 입력 칸이 비어있다면)
+            if (!(heightCm > 0 && weightKg > 0) && !(bloodSugar > 0) && !(totalCalories > 0)) {
                 alert("확인할 값을 하나 이상 입력해주세요!");
             }
         }
