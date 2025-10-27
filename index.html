@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>종합 건강 계산기 v6.1 (오류 수정)</title>
+    <title>종합 건강 계산기 v8 (효과+)</title>
 
     <style>
         body {
@@ -15,7 +15,6 @@
             min-height: 100vh; 
             padding: 2rem 0;
         }
-
         .calculator-card {
             background-color: #ffffff;
             padding: 2rem;
@@ -23,118 +22,31 @@
             box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
             width: 90%;
             max-width: 450px;
-        }
-
-        h1 {
-            color: #333;
-            font-size: 1.5rem;
-            text-align: center;
-            margin-bottom: 1.5rem;
-        }
-
-        .input-group {
-            margin-bottom: 1.25rem;
-        }
-
-        .input-group label {
-            display: block;
-            margin-bottom: 0.5rem;
-            color: #555;
-            font-weight: 600;
-        }
-
-        .input-group input {
-            width: 100%;
-            padding: 0.75rem;
-            border: 1px solid #ddd;
-            border-radius: 8px;
+            min-height: 500px; 
             box-sizing: border-box;
-            font-size: 1rem;
         }
-        
-        h2 {
-            font-size: 1.3rem;
-            color: #333;
-            border-bottom: 2px solid #eee;
-            padding-bottom: 0.5rem;
-            margin-top: 2rem;
-            margin-bottom: 1rem;
-            text-align: center;
-        }
-        
-        h3 {
-            font-size: 1.1rem;
-            color: #007aff;
-            margin-top: 2rem;
-            margin-bottom: 0.75rem;
-        }
-
-        .food-item {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 0.75rem 0.25rem;
-            border-bottom: 1px solid #f0f0f0;
-        }
-        
-        .food-name {
-            font-size: 1rem;
-            color: #333;
-        }
-        
-        .food-counter {
-            display: flex;
-            align-items: center;
-        }
-
-        .counter-btn {
-            width: 32px;
-            height: 32px;
-            border: none;
-            border-radius: 16px;
-            font-size: 1.5rem;
-            font-weight: 600;
-            cursor: pointer;
-            line-height: 30px;
-            transition: opacity 0.2s;
-        }
-        .counter-btn:hover {
-            opacity: 0.8;
-        }
-
-        .btn-minus {
-            background-color: #eef0f2;
-            color: #555;
-        }
-
-        .btn-plus {
-            background-color: #007aff;
-            color: white;
-        }
-
-        .count-display {
-            font-size: 1.1rem;
-            font-weight: 700;
-            color: #333;
-            margin: 0 0.75rem;
-            min-width: 20px;
-            text-align: center;
-        }
-        
-        button {
-            width: 100%;
-            padding: 0.85rem;
-            background-color: #007aff;
-            color: white;
-            border: none;
-            border-radius: 8px;
-            font-size: 1rem;
-            font-weight: 700;
-            cursor: pointer;
-            transition: background-color 0.2s;
-            margin-top: 2rem;
-        }
-
+        .page-section { display: none; }
+        h1 { color: #333; font-size: 1.5rem; text-align: center; margin-bottom: 2rem; }
+        .input-group { margin-bottom: 1.25rem; }
+        .input-group label { display: block; margin-bottom: 0.5rem; color: #555; font-weight: 600; }
+        .input-group input { width: 100%; padding: 0.75rem; border: 1px solid #ddd; border-radius: 8px; box-sizing: border-box; font-size: 1rem; }
+        .food-item { display: flex; justify-content: space-between; align-items: center; padding: 0.75rem 0.25rem; border-bottom: 1px solid #f0f0f0; }
+        .food-name { font-size: 1rem; color: #333; }
+        .food-counter { display: flex; align-items: center; }
+        .counter-btn { width: 32px; height: 32px; border: none; border-radius: 16px; font-size: 1.5rem; font-weight: 600; cursor: pointer; line-height: 30px; transition: opacity 0.2s; }
+        .counter-btn:hover { opacity: 0.8; }
+        .btn-minus { background-color: #eef0f2; color: #555; }
+        .btn-plus { background-color: #007aff; color: white; }
+        .count-display { font-size: 1.1rem; font-weight: 700; color: #333; margin: 0 0.75rem; min-width: 20px; text-align: center; }
+        .nav-buttons { display: flex; justify-content: space-between; margin-top: 2.5rem; }
+        .nav-btn { padding: 0.75rem 1.25rem; border: none; border-radius: 8px; font-size: 1rem; font-weight: 700; cursor: pointer; transition: background-color 0.2s; }
+        .btn-prev { background-color: #6c757d; color: white; }
+        .btn-prev:hover { background-color: #5a6268; }
+        .btn-next { background-color: #007aff; color: white; }
+        .btn-next:hover { background-color: #005bb5; }
+        .btn-submit { background-color: #28a745; color: white; width: 100%; }
+        .btn-submit:hover { background-color: #218838; }
+        .btn-restart { background-color: #007aff; color: white; width: 100%; }
         .result-box { margin-top: 1.5rem; padding: 1rem; background-color: #f8f8f8; border: 1px solid #eee; border-radius: 8px; text-align: center; color: #333; display: none; }
         .bmi-value, .sugar-value, .calorie-value { font-size: 1.1rem; font-weight: 600; display: block; margin-bottom: 0.5rem; }
         .bmi-status, .sugar-status, .calorie-status { font-size: 1.2rem; font-weight: 700; display: block; }
@@ -145,67 +57,102 @@
 <body>
 
     <div class="calculator-card">
-        <h1>종합 건강 계산기</h1>
 
-        <div class="input-group"><label for="height">키 (cm):</label><input type="number" id="height" placeholder="예: 170"></div>
-        <div class="input-group"><label for="weight">몸무게 (kg):</label><input type="number" id="weight" placeholder="예: 65"></div>
-        <hr style="border:none; border-top: 1px solid #eee; margin: 1.5rem 0;">
-        <div class="input-group"><label for="blood-sugar">공복 혈당 (mg/dL):</label><input type="number" id="blood-sugar" placeholder="예: 95"></div>
+        <div id="page-bmi" class="page-section">
+            <h1>[1/9] 신체 정보</h1>
+            <div class="input-group">
+                <label for="height">키 (cm):</label>
+                <input type="text" id="height" inputmode="numeric" maxlength="3" oninput="validateInput(this)" placeholder=" ">
+            </div>
+            <div class="input-group">
+                <label for="weight">몸무게 (kg):</label>
+                <input type="text" id="weight" inputmode="numeric" maxlength="3" oninput="validateInput(this)" placeholder=" ">
+            </div>
+            <div class="nav-buttons">
+                <button class="nav-btn btn-next" style="width: 100%;" onclick="showPage('page-sugar')">다음 (혈당)</button>
+            </div>
+        </div>
 
-        <h2>식단 칼로리 (v6.1)</h2>
+        <div id="page-sugar" class="page-section">
+            <h1>[2/9] 공복 혈당</h1>
+            <div class="input-group">
+                <label for="blood-sugar">공복 혈당 (mg/dL):</label>
+                <input type="text" id="blood-sugar" inputmode="numeric" maxlength="3" oninput="validateInput(this)" placeholder=" ">
+            </div>
+            <div class="nav-buttons">
+                <button class="nav-btn btn-prev" onclick="showPage('page-bmi')">이전</button>
+                <button class="nav-btn btn-next" onclick="showPage('page-breakfast')">다음 (아침)</button>
+            </div>
+        </div>
+
+        <div id="page-breakfast" class="page-section">
+            <h1>[3/9] 아침 식단</h1>
+            <div class="food-item"><span class="food-name">밥(300)</span><div class="food-counter"><button class="counter-btn btn-minus" onclick="decreaseCount('breakfast', 'rice')">-</button><span id="count-breakfast-rice" class="count-display">0</span><button class="counter-btn btn-plus" onclick="increaseCount('breakfast', 'rice')">+</button></div></div>
+            <div class="food-item"><span class="food-name">계란(120)</span><div class="food-counter"><button class="counter-btn btn-minus" onclick="decreaseCount('breakfast', 'egg')">-</button><span id="count-breakfast-egg" class="count-display">0</span><button class="counter-btn btn-plus" onclick="increaseCount('breakfast', 'egg')">+</button></div></div>
+            <div class="food-item"><span class="food-name">사과(95)</span><div class="food-counter"><button class="counter-btn btn-minus" onclick="decreaseCount('breakfast', 'apple')">-</button><span id="count-breakfast-apple" class="count-display">0</span><button class="counter-btn btn-plus" onclick="increaseCount('breakfast', 'apple')">+</button></div></div>
+            <div class="food-item"><span class="food-name">닭가슴살(165)</span><div class="food-counter"><button class="counter-btn btn-minus" onclick="decreaseCount('breakfast', 'chicken')">-</button><span id="count-breakfast-chicken" class="count-display">0</span><button class="counter-btn btn-plus" onclick="increaseCount('breakfast', 'chicken')">+</button></div></div>
+            <div class="food-item"><span class="food-name">라면(550)</span><div class="food-counter"><button class="counter-btn btn-minus" onclick="decreaseCount('breakfast', 'ramen')">-</button><span id="count-breakfast-ramen" class="count-display">0</span><button class="counter-btn btn-plus" onclick="increaseCount('breakfast', 'ramen')">+</button></div></div>
+            <div class="nav-buttons"><button class="nav-btn btn-prev" onclick="showPage('page-sugar')">이전</button><button class="nav-btn btn-next" onclick="showPage('page-morningsnack')">다음 (오전간식)</button></div>
+        </div>
+        <div id="page-morningsnack" class="page-section">
+            <h1>[4/9] 오전 간식</h1>
+            <div class="food-item"><span class="food-name">밥(300)</span><div class="food-counter"><button class="counter-btn btn-minus" onclick="decreaseCount('morningsnack', 'rice')">-</button><span id="count-morningsnack-rice" class="count-display">0</span><button class="counter-btn btn-plus" onclick="increaseCount('morningsnack', 'rice')">+</button></div></div>
+            <div class="food-item"><span class="food-name">계란(120)</span><div class="food-counter"><button class="counter-btn btn-minus" onclick="decreaseCount('morningsnack', 'egg')">-</button><span id="count-morningsnack-egg" class="count-display">0</span><button class="counter-btn btn-plus" onclick="increaseCount('morningsnack', 'egg')">+</button></div></div>
+            <div class="food-item"><span class="food-name">사과(95)</span><div class="food-counter"><button class="counter-btn btn-minus" onclick="decreaseCount('morningsnack', 'apple')">-</button><span id="count-morningsnack-apple" class="count-display">0</span><button class="counter-btn btn-plus" onclick="increaseCount('morningsnack', 'apple')">+</button></div></div>
+            <div class="food-item"><span class="food-name">닭가슴살(165)</span><div class="food-counter"><button class="counter-btn btn-minus" onclick="decreaseCount('morningsnack', 'chicken')">-</button><span id="count-morningsnack-chicken" class="count-display">0</span><button class="counter-btn btn-plus" onclick="increaseCount('morningsnack', 'chicken')">+</button></div></div>
+            <div class="food-item"><span class="food-name">라면(550)</span><div class="food-counter"><button class="counter-btn btn-minus" onclick="decreaseCount('morningsnack', 'ramen')">-</button><span id="count-morningsnack-ramen" class="count-display">0</span><button class="counter-btn btn-plus" onclick="increaseCount('morningsnack', 'ramen')">+</button></div></div>
+            <div class="nav-buttons"><button class="nav-btn btn-prev" onclick="showPage('page-breakfast')">이전</button><button class="nav-btn btn-next" onclick="showPage('page-lunch')">다음 (점심)</button></div>
+        </div>
+        <div id="page-lunch" class="page-section">
+            <h1>[5/9] 점심 식단</h1>
+            <div class="food-item"><span class="food-name">밥(300)</span><div class="food-counter"><button class="counter-btn btn-minus" onclick="decreaseCount('lunch', 'rice')">-</button><span id="count-lunch-rice" class="count-display">0</span><button class="counter-btn btn-plus" onclick="increaseCount('lunch', 'rice')">+</button></div></div>
+            <div class="food-item"><span class="food-name">계란(120)</span><div class="food-counter"><button class="counter-btn btn-minus" onclick="decreaseCount('lunch', 'egg')">-</button><span id="count-lunch-egg" class="count-display">0</span><button class="counter-btn btn-plus" onclick="increaseCount('lunch', 'egg')">+</button></div></div>
+            <div class="food-item"><span class="food-name">사과(95)</span><div class="food-counter"><button class="counter-btn btn-minus" onclick="decreaseCount('lunch', 'apple')">-</button><span id="count-lunch-apple" class="count-display">0</span><button class="counter-btn btn-plus" onclick="increaseCount('lunch', 'apple')">+</button></div></div>
+            <div class="food-item"><span class="food-name">닭가슴살(165)</span><div class="food-counter"><button class="counter-btn btn-minus" onclick="decreaseCount('lunch', 'chicken')">-</button><span id="count-lunch-chicken" class="count-display">0</span><button class="counter-btn btn-plus" onclick="increaseCount('lunch', 'chicken')">+</button></div></div>
+            <div class="food-item"><span class="food-name">라면(550)</span><div class="food-counter"><button class="counter-btn btn-minus" onclick="decreaseCount('lunch', 'ramen')">-</button><span id="count-lunch-ramen" class="count-display">0</span><button class="counter-btn btn-plus" onclick="increaseCount('lunch', 'ramen')">+</button></div></div>
+            <div class="nav-buttons"><button class="nav-btn btn-prev" onclick="showPage('page-morningsnack')">이전</button><button class="nav-btn btn-next" onclick="showPage('page-afternoonsnack')">다음 (오후간식)</button></div>
+        </div>
+        <div id="page-afternoonsnack" class="page-section">
+            <h1>[6/9] 오후 간식</h1>
+            <div class="food-item"><span class="food-name">밥(300)</span><div class="food-counter"><button class="counter-btn btn-minus" onclick="decreaseCount('afternoonsnack', 'rice')">-</button><span id="count-afternoonsnack-rice" class="count-display">0</span><button class="counter-btn btn-plus" onclick="increaseCount('afternoonsnack', 'rice')">+</button></div></div>
+            <div class="food-item"><span class="food-name">계란(120)</span><div class="food-counter"><button class="counter-btn btn-minus" onclick="decreaseCount('afternoonsnack', 'egg')">-</button><span id="count-afternoonsnack-egg" class="count-display">0</span><button class="counter-btn btn-plus" onclick="increaseCount('afternoonsnack', 'egg')">+</button></div></div>
+            <div class="food-item"><span class="food-name">사과(95)</span><div class="food-counter"><button class="counter-btn btn-minus" onclick="decreaseCount('afternoonsnack', 'apple')">-</button><span id="count-afternoonsnack-apple" class="count-display">0</span><button class="counter-btn btn-plus" onclick="increaseCount('afternoonsnack', 'apple')">+</button></div></div>
+            <div class="food-item"><span class="food-name">닭가슴살(165)</span><div class="food-counter"><button class="counter-btn btn-minus" onclick="decreaseCount('afternoonsnack', 'chicken')">-</button><span id="count-afternoonsnack-chicken" class="count-display">0</span><button class="counter-btn btn-plus" onclick="increaseCount('afternoonsnack', 'chicken')">+</button></div></div>
+            <div class="food-item"><span class="food-name">라면(550)</span><div class="food-counter"><button class="counter-btn btn-minus" onclick="decreaseCount('afternoonsnack', 'ramen')">-</button><span id="count-afternoonsnack-ramen" class="count-display">0</span><button class="counter-btn btn-plus" onclick="increaseCount('afternoonsnack', 'ramen')">+</button></div></div>
+            <div class="nav-buttons"><button class="nav-btn btn-prev" onclick="showPage('page-lunch')">이전</button><button class="nav-btn btn-next" onclick="showPage('page-dinner')">다음 (저녁)</button></div>
+        </div>
+        <div id="page-dinner" class="page-section">
+            <h1>[7/9] 저녁 식단</h1>
+            <div class="food-item"><span class="food-name">밥(300)</span><div class="food-counter"><button class="counter-btn btn-minus" onclick="decreaseCount('dinner', 'rice')">-</button><span id="count-dinner-rice" class="count-display">0</span><button class="counter-btn btn-plus" onclick="increaseCount('dinner', 'rice')">+</button></div></div>
+            <div class="food-item"><span class="food-name">계란(120)</span><div class="food-counter"><button class="counter-btn btn-minus" onclick="decreaseCount('dinner', 'egg')">-</button><span id="count-dinner-egg" class="count-display">0</span><button class="counter-btn btn-plus" onclick="increaseCount('dinner', 'egg')">+</button></div></div>
+            <div class="food-item"><span class="food-name">사과(95)</span><div class="food-counter"><button class="counter-btn btn-minus" onclick="decreaseCount('dinner', 'apple')">-</button><span id="count-dinner-apple" class="count-display">0</span><button class="counter-btn btn-plus" onclick="increaseCount('dinner', 'apple')">+</button></div></div>
+            <div class="food-item"><span class="food-name">닭가슴살(165)</span><div class="food-counter"><button class="counter-btn btn-minus" onclick="decreaseCount('dinner', 'chicken')">-</button><span id="count-dinner-chicken" class="count-display">0</span><button class="counter-btn btn-plus" onclick="increaseCount('dinner', 'chicken')">+</button></div></div>
+            <div class="food-item"><span class="food-name">라면(550)</span><div class="food-counter"><button class="counter-btn btn-minus" onclick="decreaseCount('dinner', 'ramen')">-</button><span id="count-dinner-ramen" class="count-display">0</span><button class="counter-btn btn-plus" onclick="increaseCount('dinner', 'ramen')">+</button></div></div>
+            <div class="nav-buttons"><button class="nav-btn btn-prev" onclick="showPage('page-afternoonsnack')">이전</button><button class="nav-btn btn-next" onclick="showPage('page-nightsnack')">다음 (야식)</button></div>
+        </div>
+        <div id="page-nightsnack" class="page-section">
+            <h1>[8/9] 야식 식단</h1>
+            <div class="food-item"><span class="food-name">밥(300)</span><div class="food-counter"><button class="counter-btn btn-minus" onclick="decreaseCount('nightsnack', 'rice')">-</button><span id="count-nightsnack-rice" class="count-display">0</span><button class="counter-btn btn-plus" onclick="increaseCount('nightsnack', 'rice')">+</button></div></div>
+            <div class="food-item"><span class="food-name">계란(120)</span><div class="food-counter"><button class="counter-btn btn-minus" onclick="decreaseCount('nightsnack', 'egg')">-</button><span id="count-nightsnack-egg" class="count-display">0</span><button class="counter-btn btn-plus" onclick="increaseCount('nightsnack', 'egg')">+</button></div></div>
+            <div class="food-item"><span class="food-name">사과(95)</span><div class="food-counter"><button class="counter-btn btn-minus" onclick="decreaseCount('nightsnack', 'apple')">-</button><span id="count-nightsnack-apple" class="count-display">0</span><button class="counter-btn btn-plus" onclick="increaseCount('nightsnack', 'apple')">+</button></div></div>
+            <div class="food-item"><span class="food-name">닭가슴살(165)</span><div class="food-counter"><button class="counter-btn btn-minus" onclick="decreaseCount('nightsnack', 'chicken')">-</button><span id="count-nightsnack-chicken" class="count-display">0</span><button class="counter-btn btn-plus" onclick="increaseCount('nightsnack', 'chicken')">+</button></div></div>
+            <div class="food-item"><span class="food-name">라면(550)</span><div class="food-counter"><button class="counter-btn btn-minus" onclick="decreaseCount('nightsnack', 'ramen')">-</button><span id="count-nightsnack-ramen" class="count-display">0</span><button class="counter-btn btn-plus" onclick="increaseCount('nightsnack', 'ramen')">+</button></div></div>
+            <div class="nav-buttons"><button class="nav-btn btn-prev" onclick="showPage('page-dinner')">이전</button><button class="nav-btn btn-submit" onclick="showFinalResults()">종합 결과 확인</button></div>
+        </div>
         
-        <h3>아침</h3>
-        <div class="food-item"><span class="food-name">밥 한공기 (300 kcal)</span><div class="food-counter"><button class="counter-btn btn-minus" onclick="decreaseCount('breakfast', 'rice')">-</button><span id="count-breakfast-rice" class="count-display">0</span><button class="counter-btn btn-plus" onclick="increaseCount('breakfast', 'rice')">+</button></div></div>
-        <div class="food-item"><span class="food-name">계란후라이 (120 kcal)</span><div class="food-counter"><button class="counter-btn btn-minus" onclick="decreaseCount('breakfast', 'egg')">-</button><span id="count-breakfast-egg" class="count-display">0</span><button class="counter-btn btn-plus" onclick="increaseCount('breakfast', 'egg')">+</button></div></div>
-        <div class="food-item"><span class="food-name">사과 1개 (95 kcal)</span><div class="food-counter"><button class="counter-btn btn-minus" onclick="decreaseCount('breakfast', 'apple')">-</button><span id="count-breakfast-apple" class="count-display">0</span><button class="counter-btn btn-plus" onclick="increaseCount('breakfast', 'apple')">+</button></div></div>
-        <div class="food-item"><span class="food-name">닭가슴살 100g (165 kcal)</span><div class="food-counter"><button class="counter-btn btn-minus" onclick="decreaseCount('breakfast', 'chicken')">-</button><span id="count-breakfast-chicken" class="count-display">0</span><button class="counter-btn btn-plus" onclick="increaseCount('breakfast', 'chicken')">+</button></div></div>
-        <div class="food-item"><span class="food-name">라면 1봉 (550 kcal)</span><div class="food-counter"><button class="counter-btn btn-minus" onclick="decreaseCount('breakfast', 'ramen')">-</button><span id="count-breakfast-ramen" class="count-display">0</span><button class="counter-btn btn-plus" onclick="increaseCount('breakfast', 'ramen')">+</button></div></div>
+        <div id="page-results" class="page-section">
+            <h1>[9/9] 종합 결과</h1>
+            <div id="bmi-result-area" class="result-box"></div>
+            <div id="sugar-result-area" class="result-box"></div>
+            <div id="calorie-result-area" class="result-box"></div>
+            <div class="nav-buttons">
+                <button class="nav-btn btn-restart" onclick="restartApp()">처음으로 돌아가기</button>
+            </div>
+        </div>
         
-        <h3>오전 간식</h3>
-        <div class="food-item"><span class="food-name">밥 한공기 (300 kcal)</span><div class="food-counter"><button class="counter-btn btn-minus" onclick="decreaseCount('morningsnack', 'rice')">-</button><span id="count-morningsnack-rice" class="count-display">0</span><button class="counter-btn btn-plus" onclick="increaseCount('morningsnack', 'rice')">+</button></div></div>
-        <div class="food-item"><span class="food-name">계란후라이 (120 kcal)</span><div class="food-counter"><button class="counter-btn btn-minus" onclick="decreaseCount('morningsnack', 'egg')">-</button><span id="count-morningsnack-egg" class="count-display">0</span><button class="counter-btn btn-plus" onclick="increaseCount('morningsnack', 'egg')">+</button></div></div>
-        <div class="food-item"><span class="food-name">사과 1개 (95 kcal)</span><div class="food-counter"><button class="counter-btn btn-minus" onclick="decreaseCount('morningsnack', 'apple')">-</button><span id="count-morningsnack-apple" class="count-display">0</span><button class="counter-btn btn-plus" onclick="increaseCount('morningsnack', 'apple')">+</button></div></div>
-        <div class="food-item"><span class="food-name">닭가슴살 100g (165 kcal)</span><div class="food-counter"><button class="counter-btn btn-minus" onclick="decreaseCount('morningsnack', 'chicken')">-</button><span id="count-morningsnack-chicken" class="count-display">0</span><button class="counter-btn btn-plus" onclick="increaseCount('morningsnack', 'chicken')">+</button></div></div>
-        <div class="food-item"><span class="food-name">라면 1봉 (550 kcal)</span><div class="food-counter"><button class="counter-btn btn-minus" onclick="decreaseCount('morningsnack', 'ramen')">-</button><span id="count-morningsnack-ramen" class="count-display">0</span><button class="counter-btn btn-plus" onclick="increaseCount('morningsnack', 'ramen')">+</button></div></div>
-
-        <h3>점심</h3>
-        <div class="food-item"><span class="food-name">밥 한공기 (300 kcal)</span><div class="food-counter"><button class="counter-btn btn-minus" onclick="decreaseCount('lunch', 'rice')">-</button><span id="count-lunch-rice" class="count-display">0</span><button class="counter-btn btn-plus" onclick="increaseCount('lunch', 'rice')">+</button></div></div>
-        <div class="food-item"><span class="food-name">계란후라이 (120 kcal)</span><div class="food-counter"><button class="counter-btn btn-minus" onclick="decreaseCount('lunch', 'egg')">-</button><span id="count-lunch-egg" class="count-display">0</span><button class="counter-btn btn-plus" onclick="increaseCount('lunch', 'egg')">+</button></div></div>
-        <div class="food-item"><span class="food-name">사과 1개 (95 kcal)</span><div class="food-counter"><button class="counter-btn btn-minus" onclick="decreaseCount('lunch', 'apple')">-</button><span id="count-lunch-apple" class="count-display">0</span><button class="counter-btn btn-plus" onclick="increaseCount('lunch', 'apple')">+</button></div></div>
-        <div class="food-item"><span class="food-name">닭가슴살 100g (165 kcal)</span><div class="food-counter"><button class="counter-btn btn-minus" onclick="decreaseCount('lunch', 'chicken')">-</button><span id="count-lunch-chicken" class="count-display">0</span><button class="counter-btn btn-plus" onclick="increaseCount('lunch', 'chicken')">+</button></div></div>
-        <div class="food-item"><span class="food-name">라면 1봉 (550 kcal)</span><div class="food-counter"><button class="counter-btn btn-minus" onclick="decreaseCount('lunch', 'ramen')">-</button><span id="count-lunch-ramen" class="count-display">0</span><button class="counter-btn btn-plus" onclick="increaseCount('lunch', 'ramen')">+</button></div></div>
-
-        <h3>오후 간식</h3>
-        <div class="food-item"><span class="food-name">밥 한공기 (300 kcal)</span><div class="food-counter"><button class="counter-btn btn-minus" onclick="decreaseCount('afternoonsnack', 'rice')">-</button><span id="count-afternoonsnack-rice" class="count-display">0</span><button class="counter-btn btn-plus" onclick="increaseCount('afternoonsnack', 'rice')">+</button></div></div>
-        <div class="food-item"><span class="food-name">계란후라이 (120 kcal)</span><div class="food-counter"><button class="counter-btn btn-minus" onclick="decreaseCount('afternoonsnack', 'egg')">-</button><span id="count-afternoonsnack-egg" class="count-display">0</span><button class="counter-btn btn-plus" onclick="increaseCount('afternoonsnack', 'egg')">+</button></div></div>
-        <div class="food-item"><span class="food-name">사과 1개 (95 kcal)</span><div class="food-counter"><button class="counter-btn btn-minus" onclick="decreaseCount('afternoonsnack', 'apple')">-</button><span id="count-afternoonsnack-apple" class="count-display">0</span><button class="counter-btn btn-plus" onclick="increaseCount('afternoonsnack', 'apple')">+</button></div></div>
-        <div class="food-item"><span class="food-name">닭가슴살 100g (165 kcal)</span><div class="food-counter"><button class="counter-btn btn-minus" onclick="decreaseCount('afternoonsnack', 'chicken')">-</button><span id="count-afternoonsnack-chicken" class="count-display">0</span><button class="counter-btn btn-plus" onclick="increaseCount('afternoonsnack', 'chicken')">+</button></div></div>
-        <div class="food-item"><span class="food-name">라면 1봉 (550 kcal)</span><div class="food-counter"><button class="counter-btn btn-minus" onclick="decreaseCount('afternoonsnack', 'ramen')">-</button><span id="count-afternoonsnack-ramen" class="count-display">0</span><button class="counter-btn btn-plus" onclick="increaseCount('afternoonsnack', 'ramen')">+</button></div></div>
-
-        <h3>저녁</h3>
-        <div class="food-item"><span class="food-name">밥 한공기 (300 kcal)</span><div class="food-counter"><button class="counter-btn btn-minus" onclick="decreaseCount('dinner', 'rice')">-</button><span id="count-dinner-rice" class="count-display">0</span><button class="counter-btn btn-plus" onclick="increaseCount('dinner', 'rice')">+</button></div></div>
-        <div class="food-item"><span class="food-name">계란후라이 (120 kcal)</span><div class="food-counter"><button class="counter-btn btn-minus" onclick="decreaseCount('dinner', 'egg')">-</button><span id="count-dinner-egg" class="count-display">0</span><button class="counter-btn btn-plus" onclick="increaseCount('dinner', 'egg')">+</button></div></div>
-        <div class="food-item"><span class="food-name">사과 1개 (95 kcal)</span><div class="food-counter"><button class="counter-btn btn-minus" onclick="decreaseCount('dinner', 'apple')">-</button><span id="count-dinner-apple" class="count-display">0</span><button class="counter-btn btn-plus" onclick="increaseCount('dinner', 'apple')">+</button></div></div>
-        <div class="food-item"><span class="food-name">닭가슴살 100g (165 kcal)</span><div class="food-counter"><button class="counter-btn btn-minus" onclick="decreaseCount('dinner', 'chicken')">-</button><span id="count-dinner-chicken" class="count-display">0</span><button class="counter-btn btn-plus" onclick="increaseCount('dinner', 'chicken')">+</button></div></div>
-        <div class="food-item"><span class="food-name">라면 1봉 (550 kcal)</span><div class="food-counter"><button class="counter-btn btn-minus" onclick="decreaseCount('dinner', 'ramen')">-</button><span id="count-dinner-ramen" class="count-display">0</span><button class="counter-btn btn-plus" onclick="increaseCount('dinner', 'ramen')">+</button></div></div>
-
-        <h3>야식</h3>
-        <div class="food-item"><span class="food-name">밥 한공기 (300 kcal)</span><div class="food-counter"><button class="counter-btn btn-minus" onclick="decreaseCount('nightsnack', 'rice')">-</button><span id="count-nightsnack-rice" class="count-display">0</span><button class="counter-btn btn-plus" onclick="increaseCount('nightsnack', 'rice')">+</button></div></div>
-        <div class="food-item"><span class="food-name">계란후라이 (120 kcal)</span><div class="food-counter"><button class="counter-btn btn-minus" onclick="decreaseCount('nightsnack', 'egg')">-</button><span id="count-nightsnack-egg" class="count-display">0</span><button class="counter-btn btn-plus" onclick="increaseCount('nightsnack', 'egg')">+</button></div></div>
-        <div class="food-item"><span class="food-name">사과 1개 (95 kcal)</span><div class="food-counter"><button class="counter-btn btn-minus" onclick="decreaseCount('nightsnack', 'apple')">-</button><span id="count-nightsnack-apple" class="count-display">0</span><button class="counter-btn btn-plus" onclick="increaseCount('nightsnack', 'apple')">+</button></div></div>
-        <div class="food-item"><span class="food-name">닭가슴살 100g (165 kcal)</span><div class="food-counter"><button class="counter-btn btn-minus" onclick="decreaseCount('nightsnack', 'chicken')">-</button><span id="count-nightsnack-chicken" class="count-display">0</span><button class="counter-btn btn-plus" onclick="increaseCount('nightsnack', 'chicken')">+</button></div></div>
-        <div class="food-item"><span class="food-name">라면 1봉 (550 kcal)</span><div class="food-counter"><button class="counter-btn btn-minus" onclick="decreaseCount('nightsnack', 'ramen')">-</button><span id="count-nightsnack-ramen" class="count-display">0</span><button class="counter-btn btn-plus" onclick="increaseCount('nightsnack', 'ramen')">+</button></div></div>
+    </div> <script>
         
-        <button onclick="checkHealth()">결과 확인하기</button>
-
-        <div id="bmi-result-area" class="result-box"></div>
-        <div id="sugar-result-area" class="result-box"></div>
-        <div id="calorie-result-area" class="result-box"></div>
-    </div>
-
-    <script>
-        
-        // (미니 냉장고, 끼니/음식 리스트, 카운터 함수는 v6와 동일합니다)
+        // --- 🧠 (v7 코드 재사용) ---
         const foodDatabase = { 'rice': 300, 'egg': 120, 'apple': 95, 'chicken': 165, 'ramen': 550 };
         const mealTimes = ['breakfast', 'morningsnack', 'lunch', 'afternoonsnack', 'dinner', 'nightsnack'];
         const foodIds = ['rice', 'egg', 'apple', 'chicken', 'ramen'];
@@ -216,27 +163,83 @@
             currentCount++;
             countElement.innerText = currentCount;
         }
-
         function decreaseCount(mealTime, foodId) {
             let countElement = document.getElementById('count-' + mealTime + '-' + foodId);
             let currentCount = parseInt(countElement.innerText);
-            if (currentCount > 0) {
-                currentCount--;
-                countElement.innerText = currentCount;
+            if (currentCount > 0) { currentCount--; }
+            countElement.innerText = currentCount;
+        }
+        // --- 🧠 (여기까지 v7 재사용) ---
+
+        
+        // --- 🆕 v8 '입력 감시관' 함수 (셰프님 요청!) ---
+        // (HTML의 oninput='validateInput(this)'가 호출함)
+        function validateInput(element) {
+            // 입력값에서 '숫자가 아닌 모든 것'을 '아무것도 없는 것'('')으로 바꿉니다.
+            element.value = element.value.replace(/[^0-9]/g, '');
+            // maxlength="3"는 HTML이 알아서 처리해줍니다.
+        }
+
+        // --- 🆕 v8 '타이핑 효과' 함수 (셰프님 요청!) ---
+        let currentTypingTimer; // 현재 진행 중인 타이머를 기억 (페이지 넘길 때 멈추기 위함)
+
+        function typePlaceholder(elementId, text, callback) {
+            const element = document.getElementById(elementId);
+            if (!element) return;
+            
+            element.placeholder = ''; // 시작 전 비우기
+            let i = 0;
+            const speed = 100; // 100ms (0.1초)
+
+            function type() {
+                if (i < text.length) {
+                    element.placeholder += text.charAt(i);
+                    i++;
+                    // 'currentTypingTimer'에 다음 실행할 타이머를 저장
+                    currentTypingTimer = setTimeout(type, speed);
+                } else if (callback) {
+                    callback(); // 타이핑 완료 후 다음 함수 호출 (콜백)
+                }
+            }
+            type(); // 타이핑 시작
+        }
+
+        // --- 🆕 v8 '페이지 마술사' (업그레이드!) ---
+        function showPage(pageId) {
+            // v8: 페이지 이동 시, 혹시 진행 중인 타이핑이 있다면 즉시 멈춥니다.
+            clearTimeout(currentTypingTimer);
+
+            const allPages = document.querySelectorAll('.page-section');
+            allPages.forEach(page => {
+                page.style.display = 'none';
+            });
+            
+            const targetPage = document.getElementById(pageId);
+            if (targetPage) {
+                targetPage.style.display = 'block';
+            }
+
+            // --- v8: 페이지에 맞는 '타이핑 효과'를 실행합니다 ---
+            if (pageId === 'page-bmi') {
+                // 'height' 타이핑이 끝나면(콜백), 'weight' 타이핑을 시작
+                typePlaceholder('height', '예: 170', () => {
+                    typePlaceholder('weight', '예: 65', null);
+                });
+            } else if (pageId === 'page-sugar') {
+                typePlaceholder('blood-sugar', '예: 95', null);
             }
         }
 
-        // --- 메인 계산 함수 (v6.1로 오류 수정!) ---
-        function checkHealth() {
+        // --- 🆕 v8 '메인 계산 함수' (v7과 동일, 이름만 변경) ---
+        function showFinalResults() {
+            // (v7의 계산 함수와 100% 동일합니다)
             let heightCm = document.getElementById('height').value;
             let weightKg = document.getElementById('weight').value;
             let bloodSugar = document.getElementById('blood-sugar').value;
-
             let bmiDiv = document.getElementById('bmi-result-area');
             let sugarDiv = document.getElementById('sugar-result-area');
             let calorieDiv = document.getElementById('calorie-result-area');
 
-            // --- BMI 계산 (정상) ---
             if (heightCm > 0 && weightKg > 0) {
                 let heightM = heightCm / 100;
                 let bmi = (weightKg / (heightM * heightM)).toFixed(2);
@@ -249,7 +252,6 @@
                 bmiDiv.style.display = "block";
             } else { bmiDiv.style.display = "none"; }
 
-            // --- 혈당 계산 (정상) ---
             if (bloodSugar > 0) {
                 let sugarMessage = "", sugarClass = "";
                 if (bloodSugar < 100) { sugarMessage = "공복 혈당이 '정상'입니다. 👍"; sugarClass = "status-good"; }
@@ -259,7 +261,6 @@
                 sugarDiv.style.display = "block";
             } else { sugarDiv.style.display = "none"; }
             
-            // --- 칼로리 계산 (정상) ---
             let totalCalories = 0;
             for (const meal of mealTimes) {
                 for (const food of foodIds) {
@@ -267,31 +268,44 @@
                     totalCalories += (count * foodDatabase[food]);
                 }
             }
-
-            // --- 🚨 v6.1 오류 수정된 부분! ---
-            // (v6에서는 <span class="... 로 따옴표가 겹쳤습니다)
-            // (v6.1에서는 <span class='... 로 작은따옴표를 사용해 수정했습니다)
+            
             if (totalCalories > 0) {
                 calorieDiv.innerHTML = "<span class='calorie-value'>섭취한 총 칼로리는 <strong>" + totalCalories + "</strong> kcal 입니다.</span>";
-                
-                if (totalCalories < 1500) {
-                    calorieDiv.innerHTML += "<span class='calorie-status status-good'>적절한 섭취입니다. 👍</span>";
-                } else if (totalCalories >= 1500 && totalCalories < 2500) {
-                    calorieDiv.innerHTML += "<span class='calorie-status status-warning'>조금 많아요! 😟</span>";
-                } else {
-                    calorieDiv.innerHTML += "<span class='calorie-status status-danger'>과다 섭취입니다! 🚨</span>";
-                }
-                
+                if (totalCalories < 1500) { calorieDiv.innerHTML += "<span class='calorie-status status-good'>적절한 섭취입니다. 👍</span>"; }
+                else if (totalCalories >= 1500 && totalCalories < 2500) { calorieDiv.innerHTML += "<span class='calorie-status status-warning'>조금 많아요! 😟</span>"; }
+                else { calorieDiv.innerHTML += "<span class='calorie-status status-danger'>과다 섭취입니다! 🚨</span>"; }
                 calorieDiv.style.display = "block";
             } else {
                 calorieDiv.style.display = "none";
             }
-            // --- 🚨 여기까지 수정 ---
             
-            if (!(heightCm > 0 && weightKg > 0) && !(bloodSugar > 0) && !(totalCalories > 0)) {
-                alert("확인할 값을 하나 이상 입력해주세요!");
-            }
+            showPage('page-results');
         }
+
+        // --- 🆕 v8 '처음으로' 함수 (v7과 동일) ---
+        function restartApp() {
+            document.getElementById('height').value = "";
+            document.getElementById('weight').value = "";
+            document.getElementById('blood-sugar').value = "";
+            
+            // v8: 타이핑 효과가 다시 재생될 수 있도록 placeholder도 비워줌
+            document.getElementById('height').placeholder = " ";
+            document.getElementById('weight').placeholder = " ";
+            document.getElementById('blood-sugar').placeholder = " ";
+
+            for (const meal of mealTimes) {
+                for (const food of foodIds) {
+                    document.getElementById('count-' + meal + '-' + food).innerText = "0";
+                }
+            }
+            document.getElementById('bmi-result-area').style.display = 'none';
+            document.getElementById('sugar-result-area').style.display = 'none';
+            document.getElementById('calorie-result-area').style.display = 'none';
+            showPage('page-bmi');
+        }
+
+        // --- 🆕 v8 앱 시작! (v7과 동일) ---
+        showPage('page-bmi');
     </script>
 
 </body>
