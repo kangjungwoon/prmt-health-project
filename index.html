@@ -9,7 +9,8 @@
     
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;700;800&display=swap" rel="stylesheet">
+    <!-- 변경: Poppins -> Inter (style.css에서 Inter 사용) -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap" rel="stylesheet">
     
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
@@ -27,9 +28,9 @@
 
         <main id="main-content" class="main-content">
 
-            <div id="page-bmi" class="page-section">
-                <h2>[1/11] 신체 정보</h2>
-                <p id="guidance-bmi" class="guidance-text"></p>
+            <!-- 변경: 초기 페이지가 보이도록 active 클래스 추가 -->
+            <div id="page-bmi" class="page-section active">
+                <h2>신체 정보</h2>
                 <div class="input-group">
                     <input type="text" id="height" inputmode="numeric" maxlength="3" oninput="validateInput(this)" placeholder=" ">
                     <label for="height">키 (cm)</label>
@@ -44,8 +45,7 @@
             </div>
 
             <div id="page-sugar" class="page-section">
-                <h2>[2/11] 공복 혈당</h2>
-                <p id="guidance-sugar" class="guidance-text"></p>
+                <h2>공복 혈당</h2>
                 <div class="input-group">
                     <input type="text" id="blood-sugar" inputmode="numeric" maxlength="3" oninput="validateInput(this)" placeholder=" ">
                     <label for="blood-sugar">공복 혈당 (mg/dL)</label>
@@ -57,20 +57,28 @@
             </div>
             
             <div id="page-activity" class="page-section">
-                <h2>[3/11] 오늘의 활동량</h2>
-                <p id="guidance-activity" class="guidance-text"></p>
-                <div class="button-group">
-                    <button id="activity-low" class="activity-btn" onclick="selectActivity('low')">
-                        거의 안 움직임 (좌식 생활)
+                <h2>오늘의 활동량</h2>
+                <p id="guidance-activity" class="guidance-text">해당되는 활동을 모두 선택해주세요.</p>
+                <div class="activity-grid">
+                    <button id="activity-work" class="activity-btn" onclick="toggleActivity('work')">
+                        업무 (회사/공부)
                     </button>
-                    <button id="activity-mid" class="activity-btn" onclick="selectActivity('mid')">
-                        가벼운 활동 (산책, 청소)
+                    <button id="activity-walk" class="activity-btn" onclick="toggleActivity('walk')">
+                        가벼운 걷기
                     </button>
-                    <button id="activity-high" class="activity-btn" onclick="selectActivity('high')">
-                        격렬한 운동 (달리기, 헬스)
+                    <button id="activity-exercise" class="activity-btn" onclick="toggleActivity('exercise')">
+                        운동 (헬스/달리기)
+                    </button>
+                    <button id="activity-housework" class="activity-btn" onclick="toggleActivity('housework')">
+                        집안일 (청소/설거지)
+                    </button>
+                    <button id="activity-rest" class="activity-btn" onclick="toggleActivity('rest')">
+                        휴식 (TV/수면)
+                    </button>
+                    <button id="activity-commute" class="activity-btn" onclick="toggleActivity('commute')">
+                        출퇴근/등하교
                     </button>
                 </div>
-                <input type="hidden" id="activity-level" value="">
                 <div class="nav-buttons">
                     <button class="nav-btn btn-prev" onclick="showPage('page-sugar')">이전</button>
                     <button class="nav-btn btn-next" onclick="showPage('page-sleep')">다음</button>
@@ -78,8 +86,7 @@
             </div>
 
             <div id="page-sleep" class="page-section">
-                <h2>[4/11] 어젯밤 수면 시간</h2>
-                <p id="guidance-sleep" class="guidance-text"></p>
+                <h2>어젯밤 수면 시간</h2>
                 <div class="input-group">
                     <input type="text" id="sleep-hours" inputmode="numeric" maxlength="2" oninput="validateInput(this)" placeholder=" ">
                     <label for="sleep-hours">총 몇 시간 주무셨나요?</label>
@@ -91,8 +98,7 @@
             </div>
 
             <div id="page-breakfast" class="page-section">
-                <h2>[5/11] 아침 식단</h2>
-                <p id="guidance-breakfast" class="guidance-text"></p>
+                <h2>아침 식단</h2>
                 <div class="food-item"><span class="food-name">토스트(180)</span><div class="food-counter"><button class="counter-btn btn-minus" onclick="decreaseCount('breakfast', 'toast')">-</button><span id="count-breakfast-toast" class="count-display">0</span><button class="counter-btn btn-plus" onclick="increaseCount('breakfast', 'toast')">+</button></div></div>
                 <div class="food-item"><span class="food-name">계란후라이(120)</span><div class="food-counter"><button class="counter-btn btn-minus" onclick="decreaseCount('breakfast', 'egg_fry')">-</button><span id="count-breakfast-egg_fry" class="count-display">0</span><button class="counter-btn btn-plus" onclick="increaseCount('breakfast', 'egg_fry')">+</button></div></div>
                 <div class="food-item"><span class="food-name">시리얼(150)</span><div class="food-counter"><button class="counter-btn btn-minus" onclick="decreaseCount('breakfast', 'cereal')">-</button><span id="count-breakfast-cereal" class="count-display">0</span><button class="counter-btn btn-plus" onclick="increaseCount('breakfast', 'cereal')">+</button></div></div>
@@ -105,8 +111,7 @@
             </div>
 
             <div id="page-morningsnack" class="page-section">
-                <h2>[6/11] 오전 간식</h2>
-                <p id="guidance-morningsnack" class="guidance-text"></p>
+                <h2>오전 간식</h2>
                 <div class="food-item"><span class="food-name">아메리카노(10)</span><div class="food-counter"><button class="counter-btn btn-minus" onclick="decreaseCount('morningsnack', 'americano')">-</button><span id="count-morningsnack-americano" class="count-display">0</span><button class="counter-btn btn-plus" onclick="increaseCount('morningsnack', 'americano')">+</button></div></div>
                 <div class="food-item"><span class="food-name">카페라떼(180)</span><div class="food-counter"><button class="counter-btn btn-minus" onclick="decreaseCount('morningsnack', 'latte')">-</button><span id="count-morningsnack-latte" class="count-display">0</span><button class="counter-btn btn-plus" onclick="increaseCount('morningsnack', 'latte')">+</button></div></div>
                 <div class="food-item"><span class="food-name">바나나(105)</span><div class="food-counter"><button class="counter-btn btn-minus" onclick="decreaseCount('morningsnack', 'banana')">-</button><span id="count-morningsnack-banana" class="count-display">0</span><button class="counter-btn btn-plus" onclick="increaseCount('morningsnack', 'banana')">+</button></div></div>
@@ -118,8 +123,7 @@
             </div>
 
             <div id="page-lunch" class="page-section">
-                <h2>[7/11] 점심 식단</h2>
-                <p id="guidance-lunch" class="guidance-text"></p>
+                <h2>점심 식단</h2>
                 <div class="food-item"><span class="food-name">밥(300)</span><div class="food-counter"><button class="counter-btn btn-minus" onclick="decreaseCount('lunch', 'rice')">-</button><span id="count-lunch-rice" class="count-display">0</span><button class="counter-btn btn-plus" onclick="increaseCount('lunch', 'rice')">+</button></div></div>
                 <div class="food-item"><span class="food-name">김치찌개(450)</span><div class="food-counter"><button class="counter-btn btn-minus" onclick="decreaseCount('lunch', 'kimchi_jjigae')">-</button><span id="count-lunch-kimchi_jjigae" class="count-display">0</span><button class="counter-btn btn-plus" onclick="increaseCount('lunch', 'kimchi_jjigae')">+</button></div></div>
                 <div class="food-item"><span class="food-name">제육볶음(550)</span><div class="food-counter"><button class="counter-btn btn-minus" onclick="decreaseCount('lunch', 'jeyuk_bokkeum')">-</button><span id="count-lunch-jeyuk_bokkeum" class="count-display">0</span><button class="counter-btn btn-plus" onclick="increaseCount('lunch', 'jeyuk_bokkeum')">+</button></div></div>
@@ -131,8 +135,7 @@
             </div>
             
             <div id="page-afternoonsnack" class="page-section">
-                <h2>[8/11] 오후 간식</h2>
-                <p id="guidance-afternoonsnack" class="guidance-text"></p>
+                <h2>오후 간식</h2>
                 <div class="food-item"><span class="food-name">아메리카노(10)</span><div class="food-counter"><button class="counter-btn btn-minus" onclick="decreaseCount('afternoonsnack', 'americano')">-</button><span id="count-afternoonsnack-americano" class="count-display">0</span><button class="counter-btn btn-plus" onclick="increaseCount('afternoonsnack', 'americano')">+</button></div></div>
                 <div class="food-item"><span class="food-name">카페라떼(180)</span><div class="food-counter"><button class="counter-btn btn-minus" onclick="decreaseCount('afternoonsnack', 'latte')">-</button><span id="count-afternoonsnack-latte" class="count-display">0</span><button class="counter-btn btn-plus" onclick="increaseCount('afternoonsnack', 'latte')">+</button></div></div>
                 <div class="food-item"><span class="food-name">바나나(105)</span><div class="food-counter"><button class="counter-btn btn-minus" onclick="decreaseCount('afternoonsnack', 'banana')">-</button><span id="count-afternoonsnack-banana" class="count-display">0</span><button class="counter-btn btn-plus" onclick="increaseCount('afternoonsnack', 'banana')">+</button></div></div>
@@ -144,8 +147,7 @@
             </div>
 
             <div id="page-dinner" class="page-section">
-                <h2>[9/11] 저녁 식단</h2>
-                <p id="guidance-dinner" class="guidance-text"></p>
+                <h2>저녁 식단</h2>
                 <div class="food-item"><span class="food-name">밥(300)</span><div class="food-counter"><button class="counter-btn btn-minus" onclick="decreaseCount('dinner', 'rice')">-</button><span id="count-dinner-rice" class="count-display">0</span><button class="counter-btn btn-plus" onclick="increaseCount('dinner', 'rice')">+</button></div></div>
                 <div class="food-item"><span class="food-name">닭가슴살(165)</span><div class="food-counter"><button class="counter-btn btn-minus" onclick="decreaseCount('dinner', 'chicken_breast')">-</button><span id="count-dinner-chicken_breast" class="count-display">0</span><button class="counter-btn btn-plus" onclick="increaseCount('dinner', 'chicken_breast')">+</button></div></div>
                 <div class="food-item"><span class="food-name">샐러드(150)</span><div class="food-counter"><button class="counter-btn btn-minus" onclick="decreaseCount('dinner', 'salad')">-</button><span id="count-dinner-salad" class="count-display">0</span><button class="counter-btn btn-plus" onclick="increaseCount('dinner', 'salad')">+</button></div></div>
@@ -157,8 +159,7 @@
             </div>
 
             <div id="page-nightsnack" class="page-section">
-                <h2>[10/11] 야식 식단</h2>
-                <p id="guidance-nightsnack" class="guidance-text"></p>
+                <h2>야간 섭취</h2>
                 <div class="food-item"><span class="food-name">라면(550)</span><div class="food-counter"><button class="counter-btn btn-minus" onclick="decreaseCount('nightsnack', 'ramen')">-</button><span id="count-nightsnack-ramen" class="count-display">0</span><button class="counter-btn btn-plus" onclick="increaseCount('nightsnack', 'ramen')">+</button></div></div>
                 <div class="food-item"><span class="food-name">우유(125)</span><div class="food-counter"><button class="counter-btn btn-minus" onclick="decreaseCount('nightsnack', 'milk')">-</button><span id="count-nightsnack-milk" class="count-display">0</span><button class="counter-btn btn-plus" onclick="increaseCount('nightsnack', 'milk')">+</button></div></div>
                 <div class="food-item"><span class="food-name">견과류(160)</span><div class="food-counter"><button class="counter-btn btn-minus" onclick="decreaseCount('nightsnack', 'nuts')">-</button><span id="count-nightsnack-nuts" class="count-display">0</span><button class="counter-btn btn-plus" onclick="increaseCount('nightsnack', 'nuts')">+</button></div></div>
@@ -169,7 +170,7 @@
             </div>
             
             <div id="page-results" class="page-section">
-                <h2>[11/11] 종합 결과</h2>
+                <h2>종합 결과</h2>
                 <p id="guidance-results" class="guidance-text"></p>
                 
                 <div class="chart-container">

@@ -24,15 +24,15 @@ const foodMenus = {
 const guidanceMessages = {
     'page-bmi': "기본 신체 상태(BMI)를 확인합니다.",
     'page-sugar': "혈당은 식단 조언에 중요한 기준이 됩니다.",
-    'page-activity': "섭취한 칼로리를 얼마나 소모했는지 확인합니다.", // v10 신규
-    'page-sleep': "수면의 질은 혈당과 식욕에 큰 영향을 줍니다.", // v10 신규
-    'page-breakfast': "하루를 시작하는 아침 식사를 기록해 주세요.",
-    'page-morningsnack': "오전에 드신 간식이 있나요?",
-    'page-lunch': "가장 든든한 점심 식사를 기록해 주세요.",
-    'page-afternoonsnack': "오후에 드신 간식이 있나요?",
-    'page-dinner': "하루를 마무리하는 저녁 식사입니다.",
-    'page-nightsnack': "혹시... 야식을 드셨나요? (솔직하게!)",
-    'page-results': "모든 데이터를 취합한 v10 종합 분석 결과입니다."
+    'page-activity': "활동량을 선택해주세요.",
+    'page-sleep': "수면 시간을 입력해주세요.",
+    'page-breakfast': "아침 식사를 기록해 주세요.",
+    'page-morningsnack': "오전 간식을 기록해주세요.",
+    'page-lunch': "점심 식사를 기록해 주세요.",
+    'page-afternoonsnack': "오후 간식을 기록해주세요.",
+    'page-dinner': "저녁 식사를 기록해 주세요.",
+    'page-nightsnack': "야간 섭취를 기록해주세요.",
+    'page-results': "종합 분석 결과입니다."
 };
 
 // --- 2. '앱 상태' 변수 (현재 페이지, 차트 객체) ---
@@ -90,53 +90,26 @@ function typeEffect(elementId, text, speed = 70, isPlaceholder = false, callback
 
 // --- 4. 'v10 핵심 로직' (페이지 전환, 진행 막대) ---
 
-// v10 '페이지 마술사' (애니메이션 + 프로그레스 바 + 타이핑)
-function showPage(nextPageId, direction = 'forward') {
-    // 1. 기존 타이핑 중지
-    clearTimeout(currentTypingTimer);
+// 페이지 전환 로직 수정
+function showPage(pageId, direction = 'forward') {
+    const currentPage = document.querySelector('.page-section.active');
+    const nextPage = document.getElementById(pageId);
     
-    // 2. 현재 페이지와 다음 페이지 찾기
-    const currentPageEl = document.getElementById(currentPageId);
-    const nextPageEl = document.getElementById(nextPageId);
-    
-    // 3. 페이지 번호(index) 찾기 (v10 신규: 프로그레스 바를 위해)
-    const pageOrder = ['page-bmi', 'page-sugar', 'page-activity', 'page-sleep', 'page-breakfast', 'page-morningsnack', 'page-lunch', 'page-afternoonsnack', 'page-dinner', 'page-nightsnack', 'page-results'];
-    currentPageIndex = pageOrder.indexOf(nextPageId) + 1;
+    if (!nextPage) return;
 
-    // 4. v10 '페이지 전환 애니메이션'
-    if (currentPageEl && nextPageEl) {
-        // 'animationend' (애니메이션이 끝나면) 이전 페이지를 숨김
-        const onCurrentPageAnimationEnd = () => {
-            currentPageEl.classList.remove('active');
-            currentPageEl.classList.remove('slide-out-left', 'slide-out-right');
-            currentPageEl.removeEventListener('animationend', onCurrentPageAnimationEnd);
-        };
-        const onNextPageAnimationEnd = () => {
-            nextPageEl.classList.remove('slide-in-right', 'slide-in-left');
-            nextPageEl.removeEventListener('animationend', onNextPageAnimationEnd);
-        };
-        currentPageEl.addEventListener('animationend', onCurrentPageAnimationEnd);
-        nextPageEl.addEventListener('animationend', onNextPageAnimationEnd);
-
-        // '방향'에 따라 다른 애니메이션 클래스 적용
-        nextPageEl.classList.add('active');
-        const outClass = direction === 'forward' ? 'slide-out-left' : 'slide-out-right';
-        const inClass = direction === 'forward' ? 'slide-in-right' : 'slide-in-left';
-        currentPageEl.classList.add(outClass);
-        nextPageEl.classList.add(inClass);
+    if (currentPage) {
+        currentPage.classList.remove('active');
     }
 
-    // 5. 현재 페이지 ID 갱신
-    currentPageId = nextPageId;
-    
-    // 6. v10 '프로그레스 바' 갱신
+    nextPage.classList.add('active');
+    currentPageId = pageId;
+    localStorage.setItem('currentPage', pageId);
     updateProgressBar();
-    
-    // 7. v9 '안내 문구' 타이핑
-    const guidanceId = 'guidance-' + nextPageId.split('-')[1];
-    if (guidanceMessages[nextPageId]) {
-        typeEffect(guidanceId, guidanceMessages[nextPageId], 50);
-    }
+}
+
+// 현재 페이지 저장
+function saveCurrentPage(pageId) {
+    localStorage.setItem('currentPage', pageId);
 }
 
 // v10 '프로그레스 바' 업데이트 함수
@@ -160,10 +133,48 @@ function selectActivity(level) {
     document.getElementById('activity-level').value = level;
 }
 
+let selectedActivities = new Set();
+
+function toggleActivity(activity) {
+    const button = document.getElementById(`activity-${activity}`);
+    if (selectedActivities.has(activity)) {
+        selectedActivities.delete(activity);
+        button.classList.remove('selected');
+    } else {
+        selectedActivities.add(activity);
+        button.classList.add('selected');
+    }
+    
+    // 활동량 점수 계산 (예시)
+    let activityScore = 0;
+    selectedActivities.forEach(act => {
+        switch(act) {
+            case 'work': activityScore += 2; break;
+            case 'walk': activityScore += 3; break;
+            case 'exercise': activityScore += 5; break;
+            case 'housework': activityScore += 3; break;
+            case 'rest': activityScore += 1; break;
+            case 'commute': activityScore += 2; break;
+        }
+    });
+    
+    // 결과 저장
+    sessionStorage.setItem('activityScore', activityScore);
+}
+
 
 // --- 5. 'v10 메인 분석 엔진' (결과 확인) ---
 
+// 결과 표시 로직 수정
 function showFinalResults() {
+    // 데이터 계산 및 차트 생성
+    displayResults();
+    
+    // 결과 페이지로 전환
+    showPage('page-results');
+}
+
+function displayResults() {
     // 1. 모든 값 가져오기
     let heightCm = parseFloat(document.getElementById('height').value) || 0;
     let weightKg = parseFloat(document.getElementById('weight').value) || 0;
@@ -415,57 +426,52 @@ function renderMealChart(mealTotals) {
 
 // --- 7. '초기화' 함수 (처음으로) ---
 function restartApp() {
-    // 1. 1~4단계 입력 칸 비우기
-    document.getElementById('height').value = "";
-    document.getElementById('weight').value = "";
-    document.getElementById('blood-sugar').value = "";
-    document.getElementById('sleep-hours').value = "";
-    document.getElementById('activity-level').value = "";
-    document.getElementById('activity-low').classList.remove('selected');
-    document.getElementById('activity-mid').classList.remove('selected');
-    document.getElementById('activity-high').classList.remove('selected');
+    // 입력값 초기화
+    document.querySelectorAll('input[type="text"]').forEach(input => {
+        input.value = '';
+    });
     
-    // placeholder 비우기 (타이핑 효과를 위해)
-    document.getElementById('height').placeholder = " ";
-    document.getElementById('weight').placeholder = " ";
-    document.getElementById('blood-sugar').placeholder = " ";
-    document.getElementById('sleep-hours').placeholder = " ";
-
-    // 2. 5~10단계 '모든' 카운터(v10 메뉴판 기준) 0으로 초기화
-    for (const meal in foodMenus) {
-        for (const food of foodMenus[meal]) {
-            const el = document.getElementById(`count-${meal}-${food}`);
-            if (el) el.innerText = "0";
-        }
+    // 카운터 초기화
+    document.querySelectorAll('.count-display').forEach(display => {
+        display.textContent = '0';
+    });
+    
+    // 활동량 선택 초기화
+    document.querySelectorAll('.activity-btn').forEach(btn => {
+        btn.classList.remove('selected');
+    });
+    selectedActivities.clear();
+    
+    // 차트 초기화
+    if (calorieDonutChart) {
+        calorieDonutChart.destroy();
+        calorieDonutChart = null;
+    }
+    if (mealBarChart) {
+        mealBarChart.destroy();
+        mealBarChart = null;
     }
     
-    // 3. 11단계 차트 파괴 (v10 신규)
-    if (calorieDonutChart) calorieDonutChart.destroy();
-    if (mealBarChart) mealBarChart.destroy();
+    // 결과 영역 초기화
+    document.querySelectorAll('.result-box').forEach(box => {
+        box.style.display = 'none';
+    });
     
-    // 4. 11단계 결과 박스 숨기기
-    document.getElementById('bmi-result-area').style.display = 'none';
-    document.getElementById('sugar-result-area').style.display = 'none';
-    document.getElementById('calorie-result-area').style.display = 'none';
-    document.getElementById('analysis-result-area').style.display = 'none';
-
-    // 5. 다시 1단계 페이지 보여주기
-    showPage('page-bmi', 'backward');
+    // 저장 데이터 초기화
+    localStorage.clear();
+    sessionStorage.clear();
+    
+    // 첫 페이지로 이동
+    showPage('page-bmi');
 }
 
+
 // --- 8. '앱 시작' (DOM 로드 후 1페이지 표시) ---
-document.addEventListener('DOMContentLoaded', () => {
-    // JS가 'page-bmi'를 'active'로 만들고 애니메이션 시작
-    const firstPage = document.getElementById('page-bmi');
-    firstPage.classList.add('active'); 
-    currentPageId = 'page-bmi'; // 현재 페이지 ID 설정
-    currentPageIndex = 1; // 페이지 번호 설정
-    
-    updateProgressBar(); // 프로그레스 바 1단계로 설정
-    
-    // v9/v8 타이핑 효과 시작
-    const guidanceId = 'guidance-bmi';
-    if (guidanceMessages['page-bmi']) {
-        typeEffect(guidanceId, guidanceMessages['page-bmi'], 50);
+document.addEventListener('DOMContentLoaded', function() {
+    const savedPage = localStorage.getItem('currentPage');
+    if (savedPage) {
+        showPage(savedPage);
+    } else {
+        showPage('page-bmi');
     }
 });
