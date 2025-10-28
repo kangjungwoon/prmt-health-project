@@ -467,11 +467,6 @@ function restartApp() {
 
 
 // --- 8. '앱 시작' (DOM 로드 후 1페이지 표시) ---
-document.addEventListener('DOMContentLoaded', function() {
-    const savedPage = localStorage.getItem('currentPage');
-    if (savedPage) {
-        showPage(savedPage);
-    } else {
-        showPage('page-bmi');
-    }
+document.addEventListener('DOMContentLoaded', () => {
+    // 새로운 앱 로직이 여기에 구현될 예정
 });
