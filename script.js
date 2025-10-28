@@ -22,7 +22,7 @@ const foodMenus = {
 
 // (v10 '안내 문구')
 const guidanceMessages = {
-    'page-bmi': "셰프님의 기본 신체 상태(BMI)를 확인합니다.",
+    'page-bmi': "기본 신체 상태(BMI)를 확인합니다.",
     'page-sugar': "혈당은 식단 조언에 중요한 기준이 됩니다.",
     'page-activity': "섭취한 칼로리를 얼마나 소모했는지 확인합니다.", // v10 신규
     'page-sleep': "수면의 질은 혈당과 식욕에 큰 영향을 줍니다.", // v10 신규
@@ -103,50 +103,39 @@ function showPage(nextPageId, direction = 'forward') {
     const pageOrder = ['page-bmi', 'page-sugar', 'page-activity', 'page-sleep', 'page-breakfast', 'page-morningsnack', 'page-lunch', 'page-afternoonsnack', 'page-dinner', 'page-nightsnack', 'page-results'];
     currentPageIndex = pageOrder.indexOf(nextPageId) + 1;
 
-    // 4. v10 '페이지 전환 애니메이션' (셰프님 요청!)
+    // 4. v10 '페이지 전환 애니메이션'
     if (currentPageEl && nextPageEl) {
         // 'animationend' (애니메이션이 끝나면) 이전 페이지를 숨김
-        const onAnimationEnd = () => {
+        const onCurrentPageAnimationEnd = () => {
             currentPageEl.classList.remove('active');
-            currentPageEl.removeEventListener('animationend', onAnimationEnd);
+            currentPageEl.classList.remove('slide-out-left', 'slide-out-right');
+            currentPageEl.removeEventListener('animationend', onCurrentPageAnimationEnd);
         };
-        currentPageEl.addEventListener('animationend', onAnimationEnd);
+        const onNextPageAnimationEnd = () => {
+            nextPageEl.classList.remove('slide-in-right', 'slide-in-left');
+            nextPageEl.removeEventListener('animationend', onNextPageAnimationEnd);
+        };
+        currentPageEl.addEventListener('animationend', onCurrentPageAnimationEnd);
+        nextPageEl.addEventListener('animationend', onNextPageAnimationEnd);
 
         // '방향'에 따라 다른 애니메이션 클래스 적용
-        if (direction === 'forward') {
-            currentPageEl.classList.add('slide-out-left');
-            nextPageEl.classList.add('active', 'slide-in-right');
-        } else {
-            currentPageEl.classList.add('slide-out-right');
-            nextPageEl.classList.add('active', 'slide-in-left');
-        }
-        
-        // 애니메이션 클래스 정리 (다음을 위해)
-        setTimeout(() => {
-            currentPageEl.classList.remove('slide-out-left', 'slide-out-right');
-            nextPageEl.classList.remove('slide-in-right', 'slide-in-left');
-        }, 400); // 0.4s
+        nextPageEl.classList.add('active');
+        const outClass = direction === 'forward' ? 'slide-out-left' : 'slide-out-right';
+        const inClass = direction === 'forward' ? 'slide-in-right' : 'slide-in-left';
+        currentPageEl.classList.add(outClass);
+        nextPageEl.classList.add(inClass);
     }
 
     // 5. 현재 페이지 ID 갱신
     currentPageId = nextPageId;
     
-    // 6. v10 '프로그레스 바' 갱신 (셰프님 요청!)
+    // 6. v10 '프로그레스 바' 갱신
     updateProgressBar();
     
     // 7. v9 '안내 문구' 타이핑
     const guidanceId = 'guidance-' + nextPageId.split('-')[1];
     if (guidanceMessages[nextPageId]) {
         typeEffect(guidanceId, guidanceMessages[nextPageId], 50);
-    }
-    
-    // 8. v8 '입력란' 타이핑
-    if (nextPageId === 'page-bmi') {
-        typeEffect('height', '예: 170', 100, true, () => typeEffect('weight', '예: 65', 100, true));
-    } else if (nextPageId === 'page-sugar') {
-        typeEffect('blood-sugar', '예: 95', 100, true);
-    } else if (nextPageId === 'page-sleep') {
-        typeEffect('sleep-hours', '예: 7', 100, true);
     }
 }
 
@@ -236,7 +225,7 @@ function showFinalResults() {
         calorieDiv.style.display = "block";
     } else { calorieDiv.style.display = "none"; }
 
-    // 7. --- 🚀 v10 분석 엔진 (셰프님 요청!) ---
+    // 7. --- 🚀 v10 분석 엔진 ---
     let adviceMessages = [];
     const uniqueTags = [...new Set(allTags)]; // 중복 태그 제거
 
@@ -296,7 +285,7 @@ function showFinalResults() {
     }
     analysisDiv.style.display = "block";
     
-    // 8. --- 🚀 v10 차트 그리기 (셰프님 요청!) ---
+    // 8. --- 🚀 v10 차트 그리기 ---
     // (기존 차트가 있으면 파괴하고 새로 그림)
     if (calorieDonutChart) calorieDonutChart.destroy();
     if (mealBarChart) mealBarChart.destroy();
@@ -313,6 +302,36 @@ function showFinalResults() {
 
 // --- 6. 'v10 차트 그리기' 함수 (Chart.js) ---
 
+// v10 '도넛 차트 중앙 텍스트' 플러그인
+const doughnutTextPlugin = {
+    id: 'doughnutText',
+    afterDraw(chart, args, options) {
+        const { ctx, data } = chart;
+        const { top, bottom, left, right, width, height } = chart.chartArea;
+        
+        if (data.datasets[0].data.length === 0) return;
+
+        ctx.save();
+        const eatenKcal = data.datasets[0].data[0];
+        const goalKcal = eatenKcal + data.datasets[0].data[1];
+        const percentage = goalKcal > 0 ? Math.round((eatenKcal / goalKcal) * 100) : 0;
+
+        // 1. 퍼센트 텍스트
+        ctx.font = 'bold 2rem Noto Sans KR';
+        ctx.fillStyle = 'var(--text-dark)';
+        ctx.textAlign = 'center';
+        ctx.textBaseline = 'middle';
+        ctx.fillText(`${percentage}%`, width / 2 + left, height / 2 + top - 10);
+
+        // 2. '섭취' 텍스트
+        ctx.font = '0.9rem Noto Sans KR';
+        ctx.fillStyle = 'var(--text-light)';
+        ctx.fillText('섭취', width / 2 + left, height / 2 + top + 20);
+
+        ctx.restore();
+    }
+};
+
 // v10 '도넛 차트'
 function renderCalorieChart(eatenKcal, goalKcal) {
     const ctx = document.getElementById('calorieDonutChart').getContext('2d');
@@ -320,6 +339,7 @@ function renderCalorieChart(eatenKcal, goalKcal) {
     
     calorieDonutChart = new Chart(ctx, {
         type: 'doughnut',
+        plugins: [doughnutTextPlugin], // 중앙 텍스트 플러그인 적용
         data: {
             labels: ['섭취 칼로리', '남은 칼로리'],
             datasets: [{
@@ -327,7 +347,7 @@ function renderCalorieChart(eatenKcal, goalKcal) {
                 backgroundColor: [
                     eatenKcal > goalKcal ? 'var(--accent-red)' : 'var(--primary-color)', // 목표 초과 시 빨간색
                     '#e9ecef' // 남은 부분
-                ],
+                ], 
                 borderColor: 'var(--white)',
                 borderWidth: 2
             }]
@@ -335,9 +355,13 @@ function renderCalorieChart(eatenKcal, goalKcal) {
         options: {
             responsive: true,
             plugins: {
-                title: { display: true, text: `오늘의 칼로리 (목표: ${goalKcal} kcal)`, font: { size: 16, weight: 'bold', family: 'Noto Sans KR' }, color: 'var(--text-dark)' },
-                legend: { position: 'bottom', labels: { font: { family: 'Noto Sans KR' } } }
-            }
+                title: { display: true, text: `오늘의 칼로리 목표: ${goalKcal} kcal`, font: { size: 16, weight: 'bold', family: 'Noto Sans KR' }, color: 'var(--text-dark)' },
+                legend: { position: 'bottom', labels: { font: { family: 'Noto Sans KR' }, boxWidth: 15, padding: 20 } }
+            },
+            cutout: '70%', // 도넛 두께 조절
+            layout: {
+                padding: 10
+            },
         }
     });
 }
@@ -345,6 +369,16 @@ function renderCalorieChart(eatenKcal, goalKcal) {
 // v10 '막대 차트'
 function renderMealChart(mealTotals) {
     const ctx = document.getElementById('mealBarChart').getContext('2d');
+
+    // 그라데이션 생성
+    const gradient = ctx.createLinearGradient(0, 0, 0, 400);
+    gradient.addColorStop(0, 'rgba(40, 167, 69, 0.8)');   // var(--primary-color)
+    gradient.addColorStop(1, 'rgba(40, 167, 69, 0.2)');
+
+    const borderGradient = ctx.createLinearGradient(0, 0, 0, 400);
+    borderGradient.addColorStop(0, 'var(--primary-color)');
+    borderGradient.addColorStop(1, 'var(--primary-dark)');
+
     mealBarChart = new Chart(ctx, {
         type: 'bar',
         data: {
@@ -359,9 +393,9 @@ function renderMealChart(mealTotals) {
                     mealTotals.dinner,
                     mealTotals.nightsnack
                 ],
-                backgroundColor: 'rgba(40, 167, 69, 0.7)', // 반투명 녹색
-                borderColor: 'var(--primary-color)',
-                borderWidth: 1
+                backgroundColor: gradient, // 그라데이션 적용
+                borderColor: borderGradient,
+                borderWidth: 2
             }]
         },
         options: {
@@ -434,5 +468,4 @@ document.addEventListener('DOMContentLoaded', () => {
     if (guidanceMessages['page-bmi']) {
         typeEffect(guidanceId, guidanceMessages['page-bmi'], 50);
     }
-    typeEffect('height', '예: 170', 100, true, () => typeEffect('weight', '예: 65', 100, true));
 });

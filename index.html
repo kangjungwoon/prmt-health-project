@@ -3,13 +3,13 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>v10 Pro Health Coach</title>
+    <title>Health Coach</title>
     
     <link rel="stylesheet" href="style.css">
     
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;700;800&display=swap" rel="stylesheet">
     
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
@@ -18,7 +18,7 @@
     <div class="app-shell">
         
         <header class="app-header">
-            <h1>🍏 Daily Health Coach (v10)</h1>
+            <h1>Daily Health Coach</h1>
         </header>
 
         <div class="progress-container">
@@ -31,15 +31,15 @@
                 <h2>[1/11] 신체 정보</h2>
                 <p id="guidance-bmi" class="guidance-text"></p>
                 <div class="input-group">
-                    <label for="height">키 (cm):</label>
                     <input type="text" id="height" inputmode="numeric" maxlength="3" oninput="validateInput(this)" placeholder=" ">
+                    <label for="height">키 (cm)</label>
                 </div>
                 <div class="input-group">
-                    <label for="weight">몸무게 (kg):</label>
                     <input type="text" id="weight" inputmode="numeric" maxlength="3" oninput="validateInput(this)" placeholder=" ">
+                    <label for="weight">몸무게 (kg)</label>
                 </div>
                 <div class="nav-buttons">
-                    <button class="nav-btn btn-next" style="width: 100%;" onclick="showPage('page-sugar')">다음 ➡️</button>
+                    <button class="nav-btn btn-next" style="width: 100%;" onclick="showPage('page-sugar')">다음</button>
                 </div>
             </div>
 
@@ -47,12 +47,12 @@
                 <h2>[2/11] 공복 혈당</h2>
                 <p id="guidance-sugar" class="guidance-text"></p>
                 <div class="input-group">
-                    <label for="blood-sugar">공복 혈당 (mg/dL):</label>
                     <input type="text" id="blood-sugar" inputmode="numeric" maxlength="3" oninput="validateInput(this)" placeholder=" ">
+                    <label for="blood-sugar">공복 혈당 (mg/dL)</label>
                 </div>
                 <div class="nav-buttons">
-                    <button class="nav-btn btn-prev" onclick="showPage('page-bmi')">⬅️ 이전</button>
-                    <button class="nav-btn btn-next" onclick="showPage('page-activity')">다음 ➡️</button>
+                    <button class="nav-btn btn-prev" onclick="showPage('page-bmi')">이전</button>
+                    <button class="nav-btn btn-next" onclick="showPage('page-activity')">다음</button>
                 </div>
             </div>
             
@@ -61,19 +61,19 @@
                 <p id="guidance-activity" class="guidance-text"></p>
                 <div class="button-group">
                     <button id="activity-low" class="activity-btn" onclick="selectActivity('low')">
-                        🛋️ 거의 안 움직임 (좌식 생활)
+                        거의 안 움직임 (좌식 생활)
                     </button>
                     <button id="activity-mid" class="activity-btn" onclick="selectActivity('mid')">
-                        🚶 가벼운 활동 (산책, 청소)
+                        가벼운 활동 (산책, 청소)
                     </button>
                     <button id="activity-high" class="activity-btn" onclick="selectActivity('high')">
-                        🏃 격렬한 운동 (달리기, 헬스)
+                        격렬한 운동 (달리기, 헬스)
                     </button>
                 </div>
                 <input type="hidden" id="activity-level" value="">
                 <div class="nav-buttons">
-                    <button class="nav-btn btn-prev" onclick="showPage('page-sugar')">⬅️ 이전</button>
-                    <button class="nav-btn btn-next" onclick="showPage('page-sleep')">다음 ➡️</button>
+                    <button class="nav-btn btn-prev" onclick="showPage('page-sugar')">이전</button>
+                    <button class="nav-btn btn-next" onclick="showPage('page-sleep')">다음</button>
                 </div>
             </div>
 
@@ -81,12 +81,12 @@
                 <h2>[4/11] 어젯밤 수면 시간</h2>
                 <p id="guidance-sleep" class="guidance-text"></p>
                 <div class="input-group">
-                    <label for="sleep-hours">총 몇 시간 주무셨나요?</label>
                     <input type="text" id="sleep-hours" inputmode="numeric" maxlength="2" oninput="validateInput(this)" placeholder=" ">
+                    <label for="sleep-hours">총 몇 시간 주무셨나요?</label>
                 </div>
                 <div class="nav-buttons">
-                    <button class="nav-btn btn-prev" onclick="showPage('page-activity')">⬅️ 이전</button>
-                    <button class="nav-btn btn-next" onclick="showPage('page-breakfast')">다음 ➡️</button>
+                    <button class="nav-btn btn-prev" onclick="showPage('page-activity')">이전</button>
+                    <button class="nav-btn btn-next" onclick="showPage('page-breakfast')">다음</button>
                 </div>
             </div>
 
@@ -99,8 +99,8 @@
                 <div class="food-item"><span class="food-name">우유(125)</span><div class="food-counter"><button class="counter-btn btn-minus" onclick="decreaseCount('breakfast', 'milk')">-</button><span id="count-breakfast-milk" class="count-display">0</span><button class="counter-btn btn-plus" onclick="increaseCount('breakfast', 'milk')">+</button></div></div>
                 <div class="food-item"><span class="food-name">사과(95)</span><div class="food-counter"><button class="counter-btn btn-minus" onclick="decreaseCount('breakfast', 'apple')">-</button><span id="count-breakfast-apple" class="count-display">0</span><button class="counter-btn btn-plus" onclick="increaseCount('breakfast', 'apple')">+</button></div></div>
                 <div class="nav-buttons">
-                    <button class="nav-btn btn-prev" onclick="showPage('page-sleep')">⬅️ 이전</button>
-                    <button class="nav-btn btn-next" onclick="showPage('page-morningsnack')">다음 ➡️</button>
+                    <button class="nav-btn btn-prev" onclick="showPage('page-sleep')">이전</button>
+                    <button class="nav-btn btn-next" onclick="showPage('page-morningsnack')">다음</button>
                 </div>
             </div>
 
@@ -112,8 +112,8 @@
                 <div class="food-item"><span class="food-name">바나나(105)</span><div class="food-counter"><button class="counter-btn btn-minus" onclick="decreaseCount('morningsnack', 'banana')">-</button><span id="count-morningsnack-banana" class="count-display">0</span><button class="counter-btn btn-plus" onclick="increaseCount('morningsnack', 'banana')">+</button></div></div>
                 <div class="food-item"><span class="food-name">견과류(160)</span><div class="food-counter"><button class="counter-btn btn-minus" onclick="decreaseCount('morningsnack', 'nuts')">-</button><span id="count-morningsnack-nuts" class="count-display">0</span><button class="counter-btn btn-plus" onclick="increaseCount('morningsnack', 'nuts')">+</button></div></div>
                 <div class="nav-buttons">
-                    <button class="nav-btn btn-prev" onclick="showPage('page-breakfast')">⬅️ 이전</button>
-                    <button class="nav-btn btn-next" onclick="showPage('page-lunch')">다음 ➡️</button>
+                    <button class="nav-btn btn-prev" onclick="showPage('page-breakfast')">이전</button>
+                    <button class="nav-btn btn-next" onclick="showPage('page-lunch')">다음</button>
                 </div>
             </div>
 
@@ -125,8 +125,8 @@
                 <div class="food-item"><span class="food-name">제육볶음(550)</span><div class="food-counter"><button class="counter-btn btn-minus" onclick="decreaseCount('lunch', 'jeyuk_bokkeum')">-</button><span id="count-lunch-jeyuk_bokkeum" class="count-display">0</span><button class="counter-btn btn-plus" onclick="increaseCount('lunch', 'jeyuk_bokkeum')">+</button></div></div>
                 <div class="food-item"><span class="food-name">샐러드(150)</span><div class="food-counter"><button class="counter-btn btn-minus" onclick="decreaseCount('lunch', 'salad')">-</button><span id="count-lunch-salad" class="count-display">0</span><button class="counter-btn btn-plus" onclick="increaseCount('lunch', 'salad')">+</button></div></div>
                 <div class="nav-buttons">
-                    <button class="nav-btn btn-prev" onclick="showPage('page-morningsnack')">⬅️ 이전</button>
-                    <button class="nav-btn btn-next" onclick="showPage('page-afternoonsnack')">다음 ➡️</button>
+                    <button class="nav-btn btn-prev" onclick="showPage('page-morningsnack')">이전</button>
+                    <button class="nav-btn btn-next" onclick="showPage('page-afternoonsnack')">다음</button>
                 </div>
             </div>
             
@@ -138,8 +138,8 @@
                 <div class="food-item"><span class="food-name">바나나(105)</span><div class="food-counter"><button class="counter-btn btn-minus" onclick="decreaseCount('afternoonsnack', 'banana')">-</button><span id="count-afternoonsnack-banana" class="count-display">0</span><button class="counter-btn btn-plus" onclick="increaseCount('afternoonsnack', 'banana')">+</button></div></div>
                 <div class="food-item"><span class="food-name">견과류(160)</span><div class="food-counter"><button class="counter-btn btn-minus" onclick="decreaseCount('afternoonsnack', 'nuts')">-</button><span id="count-afternoonsnack-nuts" class="count-display">0</span><button class="counter-btn btn-plus" onclick="increaseCount('afternoonsnack', 'nuts')">+</button></div></div>
                 <div class="nav-buttons">
-                    <button class="nav-btn btn-prev" onclick="showPage('page-lunch')">⬅️ 이전</button>
-                    <button class="nav-btn btn-next" onclick="showPage('page-dinner')">다음 ➡️</button>
+                    <button class="nav-btn btn-prev" onclick="showPage('page-lunch')">이전</button>
+                    <button class="nav-btn btn-next" onclick="showPage('page-dinner')">다음</button>
                 </div>
             </div>
 
@@ -151,8 +151,8 @@
                 <div class="food-item"><span class="food-name">샐러드(150)</span><div class="food-counter"><button class="counter-btn btn-minus" onclick="decreaseCount('dinner', 'salad')">-</button><span id="count-dinner-salad" class="count-display">0</span><button class="counter-btn btn-plus" onclick="increaseCount('dinner', 'salad')">+</button></div></div>
                 <div class="food-item"><span class="food-name">제육볶음(550)</span><div class="food-counter"><button class="counter-btn btn-minus" onclick="decreaseCount('dinner', 'jeyuk_bokkeum')">-</button><span id="count-dinner-jeyuk_bokkeum" class="count-display">0</span><button class="counter-btn btn-plus" onclick="increaseCount('dinner', 'jeyuk_bokkeum')">+</button></div></div>
                 <div class="nav-buttons">
-                    <button class="nav-btn btn-prev" onclick="showPage('page-afternoonsnack')">⬅️ 이전</button>
-                    <button class="nav-btn btn-next" onclick="showPage('page-nightsnack')">다음 ➡️</button>
+                    <button class="nav-btn btn-prev" onclick="showPage('page-afternoonsnack')">이전</button>
+                    <button class="nav-btn btn-next" onclick="showPage('page-nightsnack')">다음</button>
                 </div>
             </div>
 
@@ -163,8 +163,8 @@
                 <div class="food-item"><span class="food-name">우유(125)</span><div class="food-counter"><button class="counter-btn btn-minus" onclick="decreaseCount('nightsnack', 'milk')">-</button><span id="count-nightsnack-milk" class="count-display">0</span><button class="counter-btn btn-plus" onclick="increaseCount('nightsnack', 'milk')">+</button></div></div>
                 <div class="food-item"><span class="food-name">견과류(160)</span><div class="food-counter"><button class="counter-btn btn-minus" onclick="decreaseCount('nightsnack', 'nuts')">-</button><span id="count-nightsnack-nuts" class="count-display">0</span><button class="counter-btn btn-plus" onclick="increaseCount('nightsnack', 'nuts')">+</button></div></div>
                 <div class="nav-buttons">
-                    <button class="nav-btn btn-prev" onclick="showPage('page-dinner')">⬅️ 이전</button>
-                    <button class="nav-btn btn-submit" onclick="showFinalResults()">✅ 종합 결과 확인</button>
+                    <button class="nav-btn btn-prev" onclick="showPage('page-dinner')">이전</button>
+                    <button class="nav-btn btn-submit" onclick="showFinalResults()">종합 결과 확인</button>
                 </div>
             </div>
             
@@ -186,10 +186,12 @@
                 <div id="calorie-result-area" class="result-box"></div>
                 
                 <div class="nav-buttons">
-                    <button class="nav-btn btn-restart" onclick="restartApp()">🔄 처음으로 돌아가기</button>
+                    <button class="nav-btn btn-restart" onclick="restartApp()">처음으로 돌아가기</button>
                 </div>
             </div>
 
-        </main> </div> <script src="script.js"></script>
+        </main>
+    </div>
+    <script src="script.js"></script>
 </body>
 </html>
